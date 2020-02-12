@@ -1,6 +1,8 @@
+from guesser.technology import Technology
+
 class PatrickDescriptor(object):
 
     TECHNOLOGY = 'AWS'
 
-    def describe(self):
-        return self.TECHNOLOGY
+    def describe(self) -> Technology:
+        return Technology(self.TECHNOLOGY)

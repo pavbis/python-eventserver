@@ -1,6 +1,8 @@
+from guesser.technology import Technology
+
 class PavelDescriptor(object):
 
     TECHNOLOGY = 'PostgreSQL'
 
-    def describe(self):
-        return self.TECHNOLOGY
+    def describe(self) -> Technology:
+        return Technology(self.TECHNOLOGY)

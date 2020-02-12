@@ -1,7 +1,7 @@
 from message.message_writer import MessageWriter
 from guesser.technology import Technology
 
-class TechnologyQuesser:
+class TechnologyQuesser(object):
     def __init__(self, descriptor, message_writer: MessageWriter):
         self.descriptor     = descriptor
         self.message_writer = message_writer

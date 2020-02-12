@@ -3,9 +3,9 @@ import os
 from pathlib import Path
 from guesser.descriptors import PavelDescriptor, PatrickDescriptor
 from guesser.technology_guesser import TechnologyQuesser
-from values.technology         import Technology
+from values.technology          import Technology
 from message.message_writer     import MessageWriter
-from values.file_name          import FileName
+from values.file_name           import FileName
 
 class TechnologyQuesserTest(unittest.TestCase):
     

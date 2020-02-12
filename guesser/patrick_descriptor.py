@@ -1,4 +1,6 @@
 class PatrickDescriptor(object):
 
-    def describe():
-        return 'AWS'
+    TECHNOLOGY = 'AWS'
+
+    def describe(self):
+        return self.TECHNOLOGY

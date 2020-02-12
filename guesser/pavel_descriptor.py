@@ -1,4 +1,6 @@
 class PavelDescriptor(object):
 
-    def describe():
-        return 'PostgreSQL'
+    TECHNOLOGY = 'PostgreSQL'
+
+    def describe(self):
+        return self.TECHNOLOGY

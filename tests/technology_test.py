@@ -1,5 +1,5 @@
 import unittest
-from guesser.technology import Technology, InvalidTechnology
+from values.technology import Technology, InvalidTechnology
 
 class TechnologyTest(unittest.TestCase):
     def test_it_raises_exception_if_provided_primitive_type_is_empty(self):

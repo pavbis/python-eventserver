@@ -1,5 +1,5 @@
 from contextlib import contextmanager
-from message.file_name import FileName
+from values.file_name import FileName
 
 class MessageWriter(object):
     def __init__(self, file_name: FileName):

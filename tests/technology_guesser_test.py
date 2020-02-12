@@ -1,12 +1,11 @@
 import unittest
 import os
 from pathlib import Path
-from guesser.pavel_descriptor   import PavelDescriptor
+from guesser.descriptors import PavelDescriptor, PatrickDescriptor
 from guesser.technology_guesser import TechnologyQuesser
-from guesser.patrick_descriptor import PatrickDescriptor
-from guesser.technology         import Technology
+from values.technology         import Technology
 from message.message_writer     import MessageWriter
-from message.file_name          import FileName
+from values.file_name          import FileName
 
 class TechnologyQuesserTest(unittest.TestCase):
     

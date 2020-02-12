@@ -30,3 +30,8 @@ help:
 remove_pycache:
 	find . -type d -name __pycache__ -exec rm -r {} \+
 .PHONY: remove pycache
+
+##Run unittests.
+run_unittests:
+	python -m unittest discover -s .\tests\ -p '*_test.py'
+.PHONY: remove pycache

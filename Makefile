@@ -29,9 +29,9 @@ help:
 ## Remove __pycache__.
 remove_pycache:
 	find . -type d -name __pycache__ -exec rm -r {} \+
-.PHONY: remove pycache
+.PHONY: remove_pycache
 
 ##Run unittests.
 run_unittests:
-	python -m unittest discover -s .\tests\ -p '*_test.py'
-.PHONY: remove pycache
+	python3 -m unittest discover tests/ -v
+.PHONY: run_unittests

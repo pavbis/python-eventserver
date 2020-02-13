@@ -1,6 +1,7 @@
 import unittest
 from values.file_name import FileName, InvalidFileName
 
+
 class FileNameTest(unittest.TestCase):
     def test_it_raises_exception_if_provided_primitive_type_is_empty(self):
         primitive_value = ''
@@ -13,4 +14,4 @@ class FileNameTest(unittest.TestCase):
         primitive_value = 'test.txt'
         file_name = FileName(primitive_value)
 
-        self.assertEquals(primitive_value, str(file_name))
+        self.assertEqual(primitive_value, str(file_name))

@@ -3,14 +3,15 @@ import os
 from pathlib import Path
 from guesser.descriptors import PavelDescriptor, PatrickDescriptor
 from guesser.technology_guesser import TechnologyQuesser
-from values.technology          import Technology
-from message.message_writer     import MessageWriter
-from values.file_name           import FileName
+from values.technology import Technology
+from message.message_writer import MessageWriter
+from values.file_name import FileName
+
 
 class TechnologyQuesserTest(unittest.TestCase):
-    
+
     def setUp(self):
-        self.file_name      = FileName('test.txt')
+        self.file_name = FileName('test.txt')
         self.message_writer = MessageWriter(self.file_name)
 
     def get_file_content(self):
@@ -18,19 +19,19 @@ class TechnologyQuesserTest(unittest.TestCase):
 
     def test_it_recognizes_pavel(self):
         descriptor = PavelDescriptor()
-        result     = TechnologyQuesser(descriptor=descriptor, message_writer=self.message_writer).guess()
+        result = TechnologyQuesser(descriptor=descriptor, message_writer=self.message_writer).guess()
 
         self.assertTrue(os.path.isfile(str(self.file_name)))
-        self.assertEquals(PavelDescriptor.TECHNOLOGY, self.get_file_content())
+        self.assertEqual(PavelDescriptor.TECHNOLOGY, self.get_file_content())
         self.assertIsInstance(result, Technology)
         self.assertEqual(PavelDescriptor.TECHNOLOGY, str(result))
 
     def test_it_recognizes_patrick(self):
         descriptor = PatrickDescriptor()
-        result     = TechnologyQuesser(descriptor=descriptor, message_writer=self.message_writer).guess()
+        result = TechnologyQuesser(descriptor=descriptor, message_writer=self.message_writer).guess()
 
         self.assertTrue(os.path.isfile(str(self.file_name)))
-        self.assertEquals(PatrickDescriptor.TECHNOLOGY, self.get_file_content())
+        self.assertEqual(PatrickDescriptor.TECHNOLOGY, self.get_file_content())
         self.assertIsInstance(result, Technology)
         self.assertEqual(PatrickDescriptor.TECHNOLOGY, str(result))
 

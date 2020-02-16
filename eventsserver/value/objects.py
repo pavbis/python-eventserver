@@ -1,4 +1,5 @@
 import uuid
+import json
 
 
 class InvalidArgument(ValueError):
@@ -53,3 +54,28 @@ class EventName(object):
 
     def __str__(self) -> str:
         return self.__primitive_value
+
+
+class EventJson(object):
+    def __init__(self, primitive_value: str):
+        try:
+            json.loads(primitive_value)
+        except ValueError:
+            raise InvalidArgument('Value is not a JSON string.')
+        self.__primitive_value = primitive_value
+
+    def __str__(self) -> str:
+        return self.__primitive_value
+
+    def to_event_with_id(self, event_id: EventId):
+        event_data = json.loads(self.__str__())
+        print('event' not in event_data)
+        if 'event' not in event_data:
+            raise InvalidArgument('Event JSON is missing an event section. This event should be considered broken.')
+
+        if 'id' in event_data['event']:
+            raise InvalidArgument('Event already has an event ID.')
+
+        event_data['event']['id'] = str(event_id)
+
+        return event_data

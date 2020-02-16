@@ -18,5 +18,13 @@ class Event(object):
     def set_event_name(self, value):
         self.__event_name = value
 
+    def from_event_data(self, event_data: dict):
+        instance = self.__class__()
+
+        instance.event_id = EventId(event_data['event']['id'])
+        instance.event_name = EventName(event_data['event']['name'])
+
+        return self
+
     event_id = property(get_event_id, set_event_id)
     event_name = property(get_event_name, set_event_name)

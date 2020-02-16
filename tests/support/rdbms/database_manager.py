@@ -1,7 +1,8 @@
 import pg8000
 from eventsserver.config.parser import config
 from eventsserver.storage.event_stores import PostgreSqlWriteEventStore
-from eventsserver.value.objects import StreamName, ProducerId
+from eventsserver.value.objects import StreamName, ProducerId, EventName, EventId
+from eventsserver.value.event import Event
 import uuid
 
 
@@ -16,4 +17,7 @@ class DataBaseManager(object):
         stream_name = StreamName('pavel')
         producer_id = ProducerId(str(uuid.uuid4()))
         event_store = PostgreSqlWriteEventStore(connection)
-        print(event_store.save_producer_stream_relation(producer_id, stream_name))
+        event_id = EventId(str(uuid.uuid4()))
+        event_name = EventName('scream')
+        event = Event(event_id, event_name)
+

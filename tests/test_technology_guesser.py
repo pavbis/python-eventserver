@@ -1,4 +1,4 @@
-import unittest
+from unittest import TestCase
 import os
 from pathlib import Path
 from guesser.descriptors import PavelDescriptor, PatrickDescriptor
@@ -8,7 +8,7 @@ from message.message_writer import MessageWriter
 from values.file_name import FileName
 
 
-class TechnologyQuesserTest(unittest.TestCase):
+class TechnologyQuesserTest(TestCase):
 
     def setUp(self):
         self.file_name = FileName('test.txt')
@@ -37,7 +37,3 @@ class TechnologyQuesserTest(unittest.TestCase):
 
     def tearDown(self):
         os.remove(str(self.file_name))
-
-
-if __name__ == '__main__':
-    unittest.main()

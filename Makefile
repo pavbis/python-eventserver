@@ -33,5 +33,5 @@ remove_pycache:
 
 ##Run unittests.
 run_unittests:
-	python3 -m unittest discover tests/ -v
+	docker-compose run --rm backend python3 -m pipenv run python -m unittest discover tests/ -v
 .PHONY: run_unittests

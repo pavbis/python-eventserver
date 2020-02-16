@@ -4,10 +4,11 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-pylint = "*"
 
 [packages]
 requests = "*"
+psycopg2-binary = "*"
+pg8000 = "*"
 
 [requires]
 python_version = "3.7"

@@ -1,11 +1,11 @@
-import unittest
+from unittest import TestCase
 import os
 from pathlib import Path
 from message.message_writer import MessageWriter
 from values.file_name import FileName
 
 
-class MessageWriterTest(unittest.TestCase):
+class MessageWriterTest(TestCase):
     def test_it_writes_content_into_provided_file(self):
         file_name = FileName('message_writer.txt')
         message = 'Test'

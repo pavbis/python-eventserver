@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./docker/python/Dockerfile
+    ports:
+      - "8000:8000"
+    networks:
+      - events-server
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+
+  # Database
+  postgres:
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=python_test
+    image: postgres:12.1
+    ports:
+      - "5432:5432"
+    networks:
+      - events-server
+
+networks:
+  events-server:

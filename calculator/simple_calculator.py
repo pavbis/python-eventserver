@@ -1,2 +1,1 @@
-class Calc:
-    def add(self,x,y) -> int: return x+y
+def add(x: int, y: int) -> int: return x + y

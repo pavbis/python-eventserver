@@ -1,8 +1,8 @@
-import unittest
+from unittest import TestCase
 from values.technology import Technology, InvalidTechnology
 
 
-class TechnologyTest(unittest.TestCase):
+class TechnologyTest(TestCase):
     def test_it_raises_exception_if_provided_primitive_type_is_empty(self):
         primitive_value = ''
 

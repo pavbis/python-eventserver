@@ -1,5 +1,4 @@
 from typing import Optional
-import json
 
 from eventsserver.value.objects import (
     StreamName,
@@ -39,11 +38,6 @@ class PostgreSqlWriteEventStore(PersistsEventStreams):
                     'Stream is reserved for another producer: {}'.format(str(related_producer_id))
                 )
 
-            foo = {"event": {"id": "c3f390b8-302f-49af-b987-66ab0a931a62", "name": "Snickers", "version": 1},
-                   "system": {"id": "alv1", "name": "codello alvine", "time": "2019-09-06 13:58:12",
-                              "timezone": "Europe/Berlin"}, "payload": {},
-                   "trigger": {"name": "/path/to/script.php", "type": "system"}}
-
             query = 'INSERT INTO "events" ("streamName", "eventName", "sequence", "eventId", "event") VALUES (%s, %s, ' \
                     '(SELECT COALESCE(MAX("sequence"),0) FROM "events" WHERE "streamName" = %s AND "eventName" = %s ' \
                     'LIMIT 1) + 1, %s, %s)'
@@ -53,7 +47,7 @@ class PostgreSqlWriteEventStore(PersistsEventStreams):
                 query,
                 [
                     str(stream_name), str(event.event_name), str(stream_name),
-                    str(event.event_name), str(event.event_id), json.dumps(foo)
+                    str(event.event_name), str(event.event_id), event.to_json()
                 ]
             )
 

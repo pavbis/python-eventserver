@@ -14,4 +14,4 @@ class PayloadTest(TestCase):
         primitive_value = {'one': 1, 'two': 2, 'three': {'three.1': 3.1, 'three.2': 3.2}}
         payload = PayLoad(primitive_value)
 
-        self.assertEqual('{"one": 1, "two": 2, "three": {"three.1": 3.1, "three.2": 3.2}}', str(payload))
+        self.assertEqual("{'one': 1, 'two': 2, 'three': {'three.1': 3.1, 'three.2': 3.2}}", str(payload))

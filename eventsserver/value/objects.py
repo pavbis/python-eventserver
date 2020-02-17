@@ -125,7 +125,7 @@ class PayLoad(object):
         self.__primitive_value = primitive_value
 
     def __str__(self) -> str:
-        return json.dumps(self.__primitive_value)
+        return str(self.__primitive_value)
 
 
 class EventJson(object):
@@ -217,6 +217,24 @@ class Event(object):
 
         return instance
 
+    def to_event_data(self) -> dict:
+        event_data = {'event': {}, 'system': {}, 'trigger': {}, 'payload': {str(self.__payload)}}
+
+        event_data['event']['id'] = str(self.__event_id)
+        event_data['event']['name'] = str(self.__event_name)
+        event_data['event']['version'] = int(self.__event_version)
+        event_data['system']['id'] = str(self.__system_id)
+        event_data['system']['name'] = str(self.__system_name)
+        event_data['system']['time'] = str(self.__system_time)
+        event_data['system']['timezone'] = str(self.__time_zone)
+        event_data['trigger']['name'] = str(self.__trigger_name)
+        event_data['trigger']['type'] = str(self.__trigger_type)
+
+        return event_data
+
+    def to_json(self) -> str:
+        return json.dumps(self.to_event_data(), cls=SetEncoder)
+
     event_id = property(get_event_id)
     event_name = property(get_event_name)
     event_version = property(get_event_version)
@@ -227,3 +245,10 @@ class Event(object):
     trigger_type = property(get_trigger_type)
     trigger_name = property(get_trigger_name)
     payload = property(get_payload)
+
+
+class SetEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, set):
+            return list(obj)
+        return json.JSONEncoder.default(self, obj)

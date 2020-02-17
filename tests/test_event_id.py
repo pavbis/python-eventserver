@@ -12,6 +12,6 @@ class EventIdTest(TestCase):
 
     def test_it_returns_provided_primitive_value(self):
         primitive_value = 'd9e0236f-2a93-4a4e-8026-f46d9605a5fb'
-        file_name = EventId(primitive_value)
+        event_id = EventId(primitive_value)
 
-        self.assertEqual(primitive_value, str(file_name))
+        self.assertEqual(primitive_value, str(event_id))

@@ -1,6 +1,5 @@
 from unittest import TestCase
 from eventsserver.config.parser import *
-from tests.support.rdbms.database_manager import DataBaseManager
 
 
 class MyTestCase(TestCase):
@@ -10,8 +9,6 @@ class MyTestCase(TestCase):
         self.assertTrue('Section foo not found in the invalid.ini file' in str(context.exception))
 
     def test_it_returns_section_if_section_exists(self):
-        dbm = DataBaseManager()
-        dbm.create_schema()
 
         self.assertEqual(
             config('eventsserver/config/database.ini', 'postgresql'),

@@ -12,6 +12,6 @@ class StreamNameTest(TestCase):
 
     def test_it_returns_provided_primitive_value(self):
         primitive_value = 'test'
-        file_name = StreamName(primitive_value)
+        stream_name = StreamName(primitive_value)
 
-        self.assertEqual(primitive_value, str(file_name))
+        self.assertEqual(primitive_value, str(stream_name))

@@ -12,6 +12,6 @@ class EventNameTest(TestCase):
 
     def test_it_returns_provided_primitive_value(self):
         primitive_value = 'test'
-        file_name = EventName(primitive_value)
+        event_name = EventName(primitive_value)
 
-        self.assertEqual(primitive_value, str(file_name))
+        self.assertEqual(primitive_value, str(event_name))

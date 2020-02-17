@@ -1,10 +1,10 @@
 from typing import Optional
 import json
 
-from eventsserver.value.event import Event
 from eventsserver.value.objects import (
     StreamName,
-    ProducerId
+    ProducerId,
+    Event
 )
 
 from pg8000 import Connection

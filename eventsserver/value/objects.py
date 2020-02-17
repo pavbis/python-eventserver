@@ -153,6 +153,38 @@ class EventJson(object):
         return Event.from_event_data(event_data)
 
 
+class ConsumerId(object):
+    def __init__(self, primitive_value):
+        try:
+            uuid.UUID(str(primitive_value))
+        except ValueError:
+            raise InvalidArgument('invalid uuid provided.')
+        self.__primitive_value = primitive_value
+
+    def __str__(self) -> str:
+        return self.__primitive_value
+
+
+class Offset(object):
+    def __init__(self, primitive_value: int):
+        if primitive_value < 0:
+            raise InvalidArgument('Offset cannot be lower than zero.')
+        self.__primitive_value = primitive_value
+
+    def __int__(self):
+        return self.__primitive_value
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Offset):
+            return NotImplemented
+        return self.__primitive_value == other.__primitive_value
+
+    def increment(self):
+        self.__primitive_value += 1
+
+        return self
+
+
 class Event(object):
     def __init__(self,
                  event_id: EventId, event_name: EventName, event_version: EventVersion,

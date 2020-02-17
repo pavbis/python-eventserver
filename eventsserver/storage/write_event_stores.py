@@ -1,20 +1,22 @@
 from typing import Optional
-
 from eventsserver.value.objects import (
     StreamName,
     ProducerId,
-    Event
+    Event,
+    ConsumerId,
+    EventId,
+    EventName,
+    Offset
 )
-
 from pg8000 import Connection
-from eventsserver.storage.exceptions import StreamReservedForProducer
+from eventsserver.storage.exceptions import StreamReservedForProducer, EventStoreError
 
 
 class PersistsEventStreams(object):
     def record_event(self, producer_id: ProducerId, stream_name: StreamName, event: Event) -> None:
         raise NotImplementedError
 
-    def acknowledge_event(self) -> None:
+    def acknowledge_event(self, consumer_id: ConsumerId, stream_name: StreamName, event_id: EventId) -> None:
         raise NotImplementedError
 
     def update_consumer_offset(self) -> None:
@@ -59,12 +61,6 @@ class PostgreSqlWriteEventStore(PersistsEventStreams):
             if self.connection.in_transaction:
                 self.connection.close()
 
-    def acknowledge_event(self) -> None:
-        pass
-
-    def update_consumer_offset(self) -> None:
-        pass
-
     def __save_producer_stream_relation(self, producer_id: ProducerId, stream_name: StreamName) -> None:
         query = 'INSERT INTO "producerStreamRelations" ("producerId", "streamName") VALUES (%s, %s) ON CONFLICT (' \
                 '"streamName") DO NOTHING'
@@ -83,3 +79,47 @@ class PostgreSqlWriteEventStore(PersistsEventStreams):
                 return producer_id
             else:
                 return ProducerId(producer_id[0])
+
+    def acknowledge_event(self, consumer_id: ConsumerId, stream_name: StreamName, event_id: EventId) -> None:
+        event_name, sequence = self.__get_event_name_and_sequence(stream_name, event_id)
+        consumer_offset = self.__get_consumer_offset(consumer_id, stream_name, event_name)
+        next_offset = consumer_offset.increment()
+
+        if next_offset != sequence:
+            raise EventStoreError('Consumer offset mismatch: {}->{}'.format(str(next_offset), str(sequence)))
+
+        query = 'INSERT INTO "consumerOffsets" ("consumerId", "streamName", "eventName", "offset") VALUES (%s, %s, ' \
+                '%s, %s) ON CONFLICT ("consumerId", "streamName", "eventName") DO UPDATE SET "offset" = ' \
+                'EXCLUDED."offset", "movedAt" = now()'
+
+        cursor = self.connection.cursor()
+        cursor.execute(query, [str(consumer_id), str(stream_name), str(event_name), int(next_offset)])
+        self.connection.commit()
+
+    def __get_consumer_offset(self, consumer_id: ConsumerId, stream_name: StreamName, event_name: EventName) -> Offset:
+        with self.connection.cursor() as cursor:
+            query = 'SELECT "offset" FROM "consumerOffsets" WHERE "consumerId" = %s AND "eventName" = %s AND ' \
+                    '"streamName" = %s LIMIT 1 '
+            cursor.execute(query, [str(consumer_id), str(event_name), str(stream_name)])
+
+            row = cursor.fetchone()
+
+            return Offset(0 if row is None else int(row[0]))
+
+    def __get_event_name_and_sequence(self, stream_name: StreamName, event_id: EventId):
+        with self.connection.cursor() as cursor:
+            query = 'SELECT "eventName", "sequence" FROM "events" WHERE "streamName" = %s AND "eventId" = %s LIMIT 1'
+            cursor.execute(query, [str(stream_name), str(event_id)])
+
+            row = cursor.fetchone()
+
+            if row is None:
+                raise EventStoreError('Event not found in stream: {}/{}'.format(str(stream_name), str(event_id)))
+
+            event_name = EventName(row[0])
+            sequence = Offset(row[1])
+
+            return [event_name, sequence]
+
+    def update_consumer_offset(self) -> None:
+        pass

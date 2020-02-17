@@ -9,6 +9,7 @@ verify_ssl = true
 requests = "*"
 psycopg2-binary = "*"
 pg8000 = "*"
+pytz = "*"
 
 [requires]
 python_version = "3.7"

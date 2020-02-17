@@ -1,5 +1,7 @@
 import uuid
 import json
+import pytz
+from datetime import datetime
 
 
 class InvalidArgument(ValueError):
@@ -86,6 +88,46 @@ class SystemName(object):
         return self.__primitive_value
 
 
+class TimeZone(object):
+    def __init__(self, primitive_value: str):
+        if primitive_value not in pytz.all_timezones:
+            raise InvalidArgument('Unknown or bad timezone.')
+        self.__primitive_value = primitive_value
+
+    def __str__(self) -> str:
+        return self.__primitive_value
+
+
+class TriggerType(object):
+    def __init__(self, primitive_value: str):
+        if not primitive_value:
+            raise InvalidArgument('Trigger type cannot be empty.')
+        self.__primitive_value = primitive_value
+
+    def __str__(self) -> str:
+        return self.__primitive_value
+
+
+class TriggerName(object):
+    def __init__(self, primitive_value: str):
+        if not primitive_value:
+            raise InvalidArgument('Trigger name cannot be empty.')
+        self.__primitive_value = primitive_value
+
+    def __str__(self) -> str:
+        return self.__primitive_value
+
+
+class PayLoad(object):
+    def __init__(self, primitive_value: dict):
+        if not isinstance(primitive_value, dict):
+            raise InvalidArgument('Payload must be an dict.')
+        self.__primitive_value = primitive_value
+
+    def __str__(self) -> str:
+        return json.dumps(self.__primitive_value)
+
+
 class EventJson(object):
     def __init__(self, primitive_value: str):
         try:
@@ -114,58 +156,74 @@ class EventJson(object):
 class Event(object):
     def __init__(self,
                  event_id: EventId, event_name: EventName, event_version: EventVersion,
-                 system_id: SystemId, system_name: SystemName
+                 system_id: SystemId, system_name: SystemName, time_zone: TimeZone,
+                 system_time: datetime, trigger_type: TriggerType, trigger_name: TriggerName, payload: PayLoad
                  ):
         self.__event_id = event_id
         self.__event_name = event_name
         self.__event_version = event_version
         self.__system_id = system_id
         self.__system_name = system_name
+        self.__time_zone = time_zone
+        self.__system_time = system_time
+        self.__trigger_type = trigger_type
+        self.__trigger_name = trigger_name
+        self.__payload = payload
 
     def get_event_id(self) -> EventId:
         return self.__event_id
 
-    def set_event_id(self, value) -> None:
-        self.__event_id = value
-
     def get_event_name(self) -> EventName:
         return self.__event_name
-
-    def set_event_name(self, value) -> None:
-        self.__event_name = value
 
     def get_event_version(self) -> EventVersion:
         return self.__event_version
 
-    def set_event_version(self, value) -> None:
-        self.__event_version = value
-
     def get_system_id(self) -> SystemId:
         return self.__system_id
-
-    def set_system_id(self, value) -> None:
-        self.__system_id = value
 
     def get_system_name(self) -> SystemName:
         return self.__system_name
 
-    def set_system_name(self, value) -> None:
-        self.__system_name = value
+    def get_time_zone(self) -> TimeZone:
+        return self.__time_zone
+
+    def get_system_time(self) -> datetime:
+        return self.__system_time
+
+    def get_trigger_type(self) -> TriggerType:
+        return self.__trigger_type
+
+    def get_trigger_name(self) -> TriggerName:
+        return self.__trigger_name
+
+    def get_payload(self) -> PayLoad:
+        return self.__payload
 
     @classmethod
     def from_event_data(cls, event_data: dict):
         instance = cls.__new__(cls)
 
-        instance.event_id = EventId(event_data['event']['id'])
-        instance.event_name = EventName(event_data['event']['name'])
-        instance.event_version = EventVersion(event_data['event']['version'])
-        instance.system_id = SystemId(event_data['system']['id'])
-        instance.system_name = SystemName(event_data['system']['name'])
+        instance.__event_id = EventId(event_data['event']['id'])
+        instance.__event_name = EventName(event_data['event']['name'])
+        instance.__event_version = EventVersion(event_data['event']['version'])
+        instance.__system_id = SystemId(event_data['system']['id'])
+        instance.__system_name = SystemName(event_data['system']['name'])
+        instance.__time_zone = TimeZone(event_data['system']['timezone'])
+        instance.__system_time = datetime.fromisoformat(event_data['system']['time'])
+        instance.__trigger_type = TriggerType(event_data['trigger']['type'])
+        instance.__trigger_name = TriggerName(event_data['trigger']['name'])
+        instance.__payload = PayLoad(event_data['payload'])
 
         return instance
 
-    event_id = property(get_event_id, set_event_id)
-    event_name = property(get_event_name, set_event_name)
-    event_version = property(get_event_version, set_event_version)
-    system_id = property(get_system_id, set_system_id)
-    system_name = property(get_system_name, set_system_name)
+    event_id = property(get_event_id)
+    event_name = property(get_event_name)
+    event_version = property(get_event_version)
+    system_id = property(get_system_id)
+    system_name = property(get_system_name)
+    time_zone = property(get_time_zone)
+    system_time = property(get_system_time)
+    trigger_type = property(get_trigger_type)
+    trigger_name = property(get_trigger_name)
+    payload = property(get_payload)

@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: ./docker/python/Dockerfile
+    container_name: event-server_python
+    restart: on-failure
     ports:
       - "8000:8000"
     networks:
@@ -21,6 +23,8 @@ services:
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=python_test
     image: postgres:12.1
+    container_name: events-server_postgres
+    restart: always
     ports:
       - "5432:5432"
     networks:

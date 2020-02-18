@@ -6,7 +6,8 @@ from eventsserver.value.objects import (
     ConsumerId,
     EventId,
     EventName,
-    Offset
+    Offset,
+    EventCount
 )
 from pg8000 import Connection
 from eventsserver.storage.exceptions import StreamReservedForProducer, EventStoreError
@@ -19,13 +20,18 @@ class PersistsEventStreams(object):
     def acknowledge_event(self, consumer_id: ConsumerId, stream_name: StreamName, event_id: EventId) -> None:
         raise NotImplementedError
 
-    def update_consumer_offset(self) -> None:
+    def update_consumer_offset(
+            self, stream_name: StreamName, consumer_id: ConsumerId, event_name: EventName, offset: Offset
+    ) -> None:
         raise NotImplementedError
 
 
 class PostgreSqlWriteEventStore(PersistsEventStreams):
     def __init__(self, connection: Connection):
         self.connection = connection
+
+    def close(self):
+        self.connection.close()
 
     def record_event(self, producer_id: ProducerId, stream_name: StreamName, event: Event) -> None:
         try:
@@ -40,20 +46,22 @@ class PostgreSqlWriteEventStore(PersistsEventStreams):
                     'Stream is reserved for another producer: {}'.format(str(related_producer_id))
                 )
 
-            query = 'INSERT INTO "events" ("streamName", "eventName", "sequence", "eventId", "event") VALUES (%s, %s, ' \
-                    '(SELECT COALESCE(MAX("sequence"),0) FROM "events" WHERE "streamName" = %s AND "eventName" = %s ' \
-                    'LIMIT 1) + 1, %s, %s)'
+            with self.connection.cursor() as cursor:
+                query = 'INSERT INTO "events" ("streamName", "eventName", "sequence", "eventId", "event") VALUES (%s, ' \
+                        '%s, ' \
+                        '(SELECT COALESCE(MAX("sequence"),0) FROM "events" WHERE "streamName" = %s AND "eventName" = ' \
+                        '%s ' \
+                        'LIMIT 1) + 1, %s, %s)'
 
-            cursor = self.connection.cursor()
-            cursor.execute(
-                query,
-                [
-                    str(stream_name), str(event.event_name), str(stream_name),
-                    str(event.event_name), str(event.event_id), event.to_json()
-                ]
-            )
-
-            self.connection.commit()
+                cursor.execute(
+                    query,
+                    [
+                        str(stream_name), str(event.event_name), str(stream_name),
+                        str(event.event_name), str(event.event_id), event.to_json()
+                    ]
+                )
+                self.connection.commit()
+                self.connection.close()
         except self.connection.DatabaseError as error:
             self.connection.rollback()
             print(error)
@@ -94,7 +102,6 @@ class PostgreSqlWriteEventStore(PersistsEventStreams):
 
         cursor = self.connection.cursor()
         cursor.execute(query, [str(consumer_id), str(stream_name), str(event_name), int(next_offset)])
-        self.connection.commit()
 
     def __get_consumer_offset(self, consumer_id: ConsumerId, stream_name: StreamName, event_name: EventName) -> Offset:
         with self.connection.cursor() as cursor:
@@ -121,5 +128,31 @@ class PostgreSqlWriteEventStore(PersistsEventStreams):
 
             return [event_name, sequence]
 
-    def update_consumer_offset(self) -> None:
-        pass
+    def update_consumer_offset(
+            self, stream_name: StreamName, consumer_id: ConsumerId, event_name: EventName, offset: Offset
+    ) -> None:
+        event_count = self.__count_events_for_consumer(stream_name, consumer_id, event_name)
+
+        if int(offset) > int(event_count):
+            raise EventStoreError(
+                'Offset {} can not be greater than event count {}.'.format(int(offset), int(event_count))
+            )
+
+        query = 'UPDATE "consumerOffsets" SET "offset" = %s, "movedAt" = now() WHERE "consumerId" = %s AND ' \
+                '"eventName" = %s AND "streamName" = %s '
+
+        cursor = self.connection.cursor()
+        cursor.execute(query, [int(offset), str(consumer_id), str(event_name), str(stream_name)])
+
+    def __count_events_for_consumer(
+            self, stream_name: StreamName, consumer_id: ConsumerId, event_name: EventName) -> EventCount:
+        with self.connection.cursor() as cursor:
+            query = 'SELECT COALESCE(COUNT(e."eventId"), 0) FROM events e LEFT JOIN "consumerOffsets" cO USING (' \
+                    '"eventName", "streamName") WHERE e."streamName" = %s AND e."eventName" = %s AND ' \
+                    'cO."consumerId" = %s'
+
+            cursor.execute(query, [str(stream_name), str(event_name), str(consumer_id)])
+
+            row = cursor.fetchone()
+
+            return EventCount(row[0])

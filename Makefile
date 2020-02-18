@@ -22,16 +22,42 @@ help:
 	} \
 	{ lastLine = $$0 }' $(MAKEFILE_LIST)
 
+###############
+## Var Block ##
+###############
+bin = docker-compose
+runbackend = $(bin) run --rm backend
+
 ##################
 # Useful targets #
 ##################
+
+## Start docker containers.
+dstart:
+	$(bin) up -d
+.PHONY: dstart
+
+## Pull docker containers.
+dpull:
+	$(bin) pull
+.PHONY: dpull
+
+## Stop docker containers.
+dstop:
+	$(bin) stop
+.PHONY: dstop
+
+## Remove unused docker data.
+dclear:
+	docker system prune --volumes --force
+.PHONY: dclear
 
 ## Remove __pycache__.
 remove_pycache:
 	find . -type d -name __pycache__ -exec rm -r {} \+
 .PHONY: remove_pycache
 
-##Run unittests.
+## Run unittests.
 run_unittests:
-	docker-compose run --rm backend python3 -m pipenv run python -m unittest discover tests/ -v
+	$(runbackend) python3 -m pipenv run python -m unittest discover tests/ -v
 .PHONY: run_unittests

@@ -195,6 +195,34 @@ class EventCount(object):
         return self.__primitive_value
 
 
+class MaxEventCount(object):
+    def __init__(self, primitive_value: int):
+        if primitive_value < 1:
+            raise InvalidArgument('Max consume count must be greater than 0.')
+        self.__primitive_value = primitive_value
+
+    def __int__(self):
+        return self.__primitive_value
+
+
+class ConsumerCount(object):
+    def __init__(self, primitive_value: int):
+        if primitive_value < 0:
+            raise InvalidArgument('Consumer count cannot be lower than zero.')
+        self.__primitive_value = primitive_value
+
+    def __int__(self):
+        return self.__primitive_value
+
+
+class OccurredOn(object):
+    def __init__(self, primitive_value: int):
+        self.__primitive_value = primitive_value
+
+    def __int__(self):
+        return self.__primitive_value
+
+
 class Event(object):
     def __init__(self,
                  event_id: EventId, event_name: EventName, event_version: EventVersion,

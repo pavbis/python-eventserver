@@ -2,7 +2,7 @@ from eventsserver.writemodel.results.abstract_result import AbstractResult
 from eventsserver.value.objects import EventId
 
 
-class ReceiveEventResult(AbstractResult):
+class ReceiveAcknowledgementResult(AbstractResult):
     __event_id = None
 
     def get_event_id(self) -> EventId:

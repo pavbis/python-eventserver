@@ -2,7 +2,7 @@ from eventsserver.writemodel.constants.result_type import ResultType
 
 
 class AbstractResult(object):
-    def __init__(self, result_type=ResultType.SUCCESS, message=''):
+    def __init__(self, result_type: int = ResultType.SUCCESS, message: str = ''):
         self.__result_type = result_type
         self.__message = message
 

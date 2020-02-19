@@ -2,7 +2,6 @@ from eventsserver.storage.write_event_stores import PersistsEventStreams
 from eventsserver.writemodel.commands.receive_event_command import ReceiveEventCommand
 from eventsserver.writemodel.results.receive_event_result import ReceiveEventResult
 from eventsserver.writemodel.constants.result_type import ResultType
-from pg8000 import DatabaseError
 
 
 class ReceiveEventCommandHandler(object):
@@ -19,5 +18,5 @@ class ReceiveEventCommandHandler(object):
             result.set_event_id(event_id)
 
             return result
-        except DatabaseError as error:
+        except Exception as error:
             return ReceiveEventResult(ResultType.FAILURE, str(error))

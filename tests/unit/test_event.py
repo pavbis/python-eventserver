@@ -3,13 +3,17 @@ from eventsserver.value.objects import Event
 
 
 class EventTest(TestCase):
-    def test_it_can_be_created_from_event_data(self):
-        event_data = {'event': {'name': 'Snickers', 'version': 1, 'id': 'c3f390b8-302f-49af-b987-66ab0a931a62'},
-                      'system': {'id': 'alv1', 'name': 'codello alvine', 'time': '2019-09-06 13:58:12',
-                                 'timezone': 'Europe/Berlin'},
-                      'payload': {'foo': 'bar'}, 'trigger': {'name': '/path/to/script.php', 'type': 'system'}}
+    def setUp(self) -> None:
+        self.event_data_with_event_id = {'event': {'name': 'Snickers', 'version': 1, 'id': 'c3f390b8-302f-49af-b987'
+                                                                                           '-66ab0a931a62'},
+                                         'system': {'id': 'alv1', 'name': 'codello alvine',
+                                                    'time': '2019-09-06 13:58:12',
+                                                    'timezone': 'Europe/Berlin'},
+                                         'payload': {'foo': 'bar'},
+                                         'trigger': {'name': '/path/to/script.php', 'type': 'system'}}
 
-        event = Event.from_event_data(event_data)
+    def test_it_can_be_created_from_event_data(self):
+        event = Event.from_event_data(self.event_data_with_event_id)
 
         self.assertEqual('Snickers', str(event.event_name))
         self.assertEqual(1, int(event.event_version))
@@ -23,17 +27,13 @@ class EventTest(TestCase):
         self.assertEqual("{'foo': 'bar'}", str(event.payload))
 
     def test_it_can_be_converted_to_event_data(self):
-        event_data = {'event': {'name': 'Snickers', 'version': 1, 'id': 'c3f390b8-302f-49af-b987-66ab0a931a62'},
-                      'system': {'id': 'alv1', 'name': 'codello alvine', 'time': '2019-09-06 13:58:12',
-                                 'timezone': 'Europe/Berlin'},
-                      'payload': {'foo': 'bar'}, 'trigger': {'name': '/path/to/script.php', 'type': 'system'}}
 
         expected = {'event': {'name': 'Snickers', 'version': 1, 'id': 'c3f390b8-302f-49af-b987-66ab0a931a62'},
                     'system': {'id': 'alv1', 'name': 'codello alvine', 'time': '2019-09-06 13:58:12',
                                'timezone': 'Europe/Berlin'},
                     'payload': {"{'foo': 'bar'}"}, 'trigger': {'name': '/path/to/script.php', 'type': 'system'}}
 
-        event = Event.from_event_data(event_data)
+        event = Event.from_event_data(self.event_data_with_event_id)
 
         self.assertEqual(expected, event.to_event_data())
 
@@ -50,4 +50,3 @@ class EventTest(TestCase):
         event = Event.from_event_data(event_data)
 
         self.assertEqual(expected, event.to_json())
-

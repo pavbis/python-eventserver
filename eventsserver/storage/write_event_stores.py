@@ -102,6 +102,8 @@ class PostgreSqlWriteEventStore(PersistsEventStreams):
 
         cursor = self.connection.cursor()
         cursor.execute(query, [str(consumer_id), str(stream_name), str(event_name), int(next_offset)])
+        self.connection.commit()
+        self.connection.close()
 
     def __get_consumer_offset(self, consumer_id: ConsumerId, stream_name: StreamName, event_name: EventName) -> Offset:
         with self.connection.cursor() as cursor:

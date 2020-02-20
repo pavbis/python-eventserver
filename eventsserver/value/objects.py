@@ -295,19 +295,19 @@ class Event(object):
         return self.__payload
 
     @classmethod
-    def from_event_data(cls, event_data: dict):
+    def from_event_data(cls, event_data: []):
         instance = cls.__new__(cls)
 
-        instance.__event_id = EventId(event_data['event']['id'])
-        instance.__event_name = EventName(event_data['event']['name'])
-        instance.__event_version = EventVersion(event_data['event']['version'])
-        instance.__system_id = SystemId(event_data['system']['id'])
-        instance.__system_name = SystemName(event_data['system']['name'])
-        instance.__time_zone = TimeZone(event_data['system']['timezone'])
-        instance.__system_time = datetime.fromisoformat(event_data['system']['time'])
-        instance.__trigger_type = TriggerType(event_data['trigger']['type'])
-        instance.__trigger_name = TriggerName(event_data['trigger']['name'])
-        instance.__payload = PayLoad(event_data['payload'])
+        instance.__event_id = EventId(event_data[0])
+        instance.__event_name = EventName(event_data[1])
+        instance.__event_version = EventVersion(event_data[2])
+        instance.__system_id = SystemId(event_data[3])
+        instance.__system_name = SystemName(event_data[4])
+        instance.__time_zone = TimeZone(event_data[5])
+        instance.__system_time = datetime.fromisoformat(event_data[6])
+        instance.__trigger_type = TriggerType(event_data[7])
+        instance.__trigger_name = TriggerName(event_data[8])
+        instance.__payload = PayLoad(event_data[9])
 
         return instance
 

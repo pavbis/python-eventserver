@@ -1,7 +1,7 @@
 from eventsserver.value.objects import (
-    ConsumerId, StreamName, EventName, MaxEventCount, Period, EventId, EventJson, Offset
+    ConsumerId, StreamName, EventName, MaxEventCount, Period, EventId, EventJson, Offset, Event
 )
-from typing import Generator
+from typing import Iterator
 from eventsserver.dto.stream_data import StreamData
 from eventsserver.dto.consumer_data import ConsumerData
 from eventsserver.dto.event_data import EventData
@@ -49,18 +49,18 @@ class ProvidesPredicate(object):
 
 
 class ProvidesEventStreams(object):
-    def select_events(self, query: QueriesEvents):
+    def select_events(self, query: QueriesEvents) -> Iterator[Event]:
         raise NotImplementedError
 
-    def select_streams(self, expression: ProvidesPredicate) -> Generator[StreamData]:
+    def select_streams(self, expression: ProvidesPredicate) -> Iterator[StreamData]:
         raise NotImplementedError
 
-    def select_consumers_for_stream(self, stream_name: StreamName) -> Generator[ConsumerData]:
+    def select_consumers_for_stream(self, stream_name: StreamName) -> Iterator[ConsumerData]:
         raise NotImplementedError
 
     def select_events_for_stream(
             self, stream_name: StreamName, period: SpecifiesPeriod, expression: ProvidesPredicate
-    ) -> Generator[EventData]:
+    ) -> Iterator[EventData]:
         raise NotImplementedError
 
     def read_payload_for_event_id(self, event_id: EventId) -> EventJson:
@@ -72,7 +72,7 @@ class PostgreSqlReadEventStore(ProvidesEventStreams):
     def __init__(self, connection: Connection):
         self.__connection = connection
 
-    def select_events(self, query: QueriesEvents):
+    def select_events(self, query: QueriesEvents) -> Iterator[Event]:
         consumer_offset = self.__get_consumer_offset(
             consumer_id=query.get_consumer_id(), stream_name=query.get_stream_name(), event_name=query.get_event_name()
         )
@@ -81,11 +81,11 @@ class PostgreSqlReadEventStore(ProvidesEventStreams):
             sql_query = '''
             SELECT "sequence", "event" 
                 FROM "events" 
-                WHERE "streamName" = :streamName 
-                AND "eventName" = :eventName 
-                AND "sequence" > :consumerOffset
+                WHERE "streamName" = %s 
+                AND "eventName" = %s 
+                AND "sequence" > %s
                 ORDER BY "sequence" ASC 
-                LIMIT :maxEventCount
+                LIMIT %s
             '''
 
             cursor.execute(
@@ -99,7 +99,7 @@ class PostgreSqlReadEventStore(ProvidesEventStreams):
             rows = cursor.fetchall()
 
             for row in rows:
-                yield StreamData.from_list(row)
+                yield Event.from_event_data(event_data=row)
 
     def __get_consumer_offset(self, consumer_id: ConsumerId, stream_name: StreamName, event_name: EventName) -> Offset:
         with self.__connection.cursor() as cursor:
@@ -114,16 +114,16 @@ class PostgreSqlReadEventStore(ProvidesEventStreams):
             cursor.execute(query, [str(consumer_id), str(stream_name), str(event_name)])
             row = cursor.fetchone()
 
-            return Offset(int(row[0]))
+            return Offset(0)
 
-    def select_streams(self, expression: ProvidesPredicate) -> Generator[StreamData]:
+    def select_streams(self, expression: ProvidesPredicate) -> Iterator[StreamData]:
         pass
 
-    def select_consumers_for_stream(self, stream_name: StreamName) -> Generator[ConsumerData]:
+    def select_consumers_for_stream(self, stream_name: StreamName) -> Iterator[ConsumerData]:
         pass
 
     def select_events_for_stream(self, stream_name: StreamName, period: SpecifiesPeriod,
-                                 expression: ProvidesPredicate) -> Generator[EventData]:
+                                 expression: ProvidesPredicate) -> Iterator[EventData]:
         pass
 
     def read_payload_for_event_id(self, event_id: EventId) -> EventJson:

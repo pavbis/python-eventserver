@@ -12,15 +12,15 @@ class StreamData(object):
     __last_event_occurred_at = None
 
     @classmethod
-    def from_dict(cls, stream_data: dict):
+    def from_list(cls, stream_data: []):
         instance = cls.__new__(cls)
 
-        instance.__producer_id = ProducerId(stream_data['producer_id'])
-        instance.__stream_name = StreamName(stream_data['stream_name'])
-        instance.__events_count = EventCount(stream_data['events_count'])
-        instance.__consumer_count = ConsumerCount(stream_data['consumer_count'])
-        instance.__first_event_occurred_at = OccurredOn(stream_data['first_event_occurred_at'])
-        instance.__last_event_occurred_at = OccurredOn(stream_data['last_event_occurred_at'])
+        instance.__producer_id = ProducerId(stream_data[0])
+        instance.__stream_name = StreamName(stream_data[1])
+        instance.__events_count = EventCount(stream_data[2])
+        instance.__consumer_count = ConsumerCount(stream_data[3])
+        instance.__first_event_occurred_at = OccurredOn(stream_data[4])
+        instance.__last_event_occurred_at = OccurredOn(stream_data[5])
 
         return instance
 

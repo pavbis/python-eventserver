@@ -1,6 +1,11 @@
-from eventsserver.value.objects import ConsumerId, StreamName, EventName, MaxEventCount
+from eventsserver.value.objects import (
+    ConsumerId, StreamName, EventName, MaxEventCount, Period, EventId, EventJson, Offset
+)
 from typing import Generator
 from eventsserver.dto.stream_data import StreamData
+from eventsserver.dto.consumer_data import ConsumerData
+from eventsserver.dto.event_data import EventData
+from pg8000 import Connection
 
 
 class QueriesEvents(object):
@@ -21,6 +26,20 @@ class ContainsSearchCriteria(object):
     pass
 
 
+class SpecifiesPeriod(object):
+    def is_satisfied_by(self, period: Period) -> bool:
+        raise NotImplementedError
+
+    def and_expression(self) -> str:
+        raise NotImplementedError
+
+    def period(self) -> str:
+        raise NotImplementedError
+
+    def period_literal(self) -> str:
+        raise NotImplementedError
+
+
 class ProvidesPredicate(object):
     def predicate(self) -> str:
         raise NotImplementedError
@@ -36,5 +55,76 @@ class ProvidesEventStreams(object):
     def select_streams(self, expression: ProvidesPredicate) -> Generator[StreamData]:
         raise NotImplementedError
 
-    def select_consumers_for_stream(self, stream_name: StreamName):
+    def select_consumers_for_stream(self, stream_name: StreamName) -> Generator[ConsumerData]:
+        raise NotImplementedError
+
+    def select_events_for_stream(
+            self, stream_name: StreamName, period: SpecifiesPeriod, expression: ProvidesPredicate
+    ) -> Generator[EventData]:
+        raise NotImplementedError
+
+    def read_payload_for_event_id(self, event_id: EventId) -> EventJson:
+        raise NotImplementedError
+
+
+class PostgreSqlReadEventStore(ProvidesEventStreams):
+
+    def __init__(self, connection: Connection):
+        self.__connection = connection
+
+    def select_events(self, query: QueriesEvents):
+        consumer_offset = self.__get_consumer_offset(
+            consumer_id=query.get_consumer_id(), stream_name=query.get_stream_name(), event_name=query.get_event_name()
+        )
+
+        with self.__connection.cursor() as cursor:
+            sql_query = '''
+            SELECT "sequence", "event" 
+                FROM "events" 
+                WHERE "streamName" = :streamName 
+                AND "eventName" = :eventName 
+                AND "sequence" > :consumerOffset
+                ORDER BY "sequence" ASC 
+                LIMIT :maxEventCount
+            '''
+
+            cursor.execute(
+                sql_query,
+                [
+                    str(query.get_stream_name()), str(query.get_event_name()),
+                    int(consumer_offset), int(query.get_max_event_count())
+                ]
+            )
+
+            rows = cursor.fetchall()
+
+            for row in rows:
+                yield StreamData.from_list(row)
+
+    def __get_consumer_offset(self, consumer_id: ConsumerId, stream_name: StreamName, event_name: EventName) -> Offset:
+        with self.__connection.cursor() as cursor:
+            query = '''
+            SELECT "offset" FROM "consumerOffsets" 
+                    WHERE "consumerId" = %s
+                    AND "streamName" = %s
+                    AND "eventName" = %s
+                    LIMIT 1
+            '''
+
+            cursor.execute(query, [str(consumer_id), str(stream_name), str(event_name)])
+            row = cursor.fetchone()
+
+            return Offset(int(row[0]))
+
+    def select_streams(self, expression: ProvidesPredicate) -> Generator[StreamData]:
+        pass
+
+    def select_consumers_for_stream(self, stream_name: StreamName) -> Generator[ConsumerData]:
+        pass
+
+    def select_events_for_stream(self, stream_name: StreamName, period: SpecifiesPeriod,
+                                 expression: ProvidesPredicate) -> Generator[EventData]:
+        pass
+
+    def read_payload_for_event_id(self, event_id: EventId) -> EventJson:
         pass

@@ -216,10 +216,34 @@ class ConsumerCount(object):
 
 
 class OccurredOn(object):
+    def __init__(self, date_time: datetime):
+        self.__date_time = date_time
+
+    def __str__(self) -> str:
+        return str(self.__date_time)
+
+
+class ConsumedPercentage(object):
+    def __init__(self, primitive_value: float):
+        self.__primitive_value = primitive_value
+
+    def __float__(self) -> float:
+        return self.__primitive_value
+
+
+class Behind(object):
     def __init__(self, primitive_value: int):
         self.__primitive_value = primitive_value
 
-    def __int__(self):
+    def __int__(self) -> int:
+        return self.__primitive_value
+
+
+class Period(object):
+    def __init__(self, primitive_value: str):
+        self.__primitive_value = primitive_value
+
+    def __str__(self) -> str:
         return self.__primitive_value
 
 

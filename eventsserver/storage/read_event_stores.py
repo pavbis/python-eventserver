@@ -99,7 +99,7 @@ class PostgreSqlReadEventStore(ProvidesEventStreams):
             rows = cursor.fetchall()
 
             for row in rows:
-                yield Event.from_event_data(event_data=row)
+                yield Event.from_event_data(event_data=row[1])
 
     def __get_consumer_offset(self, consumer_id: ConsumerId, stream_name: StreamName, event_name: EventName) -> Offset:
         with self.__connection.cursor() as cursor:
@@ -114,7 +114,7 @@ class PostgreSqlReadEventStore(ProvidesEventStreams):
             cursor.execute(query, [str(consumer_id), str(stream_name), str(event_name)])
             row = cursor.fetchone()
 
-            return Offset(0)
+            return Offset(0 if row is None else int(row[0]))
 
     def select_streams(self, expression: ProvidesPredicate) -> Iterator[StreamData]:
         pass

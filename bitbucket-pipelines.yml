@@ -3,5 +3,7 @@ pipelines:
   default:
     - step:
         script:
-          - python -m unittest discover tests/
           - pip3 install pipenv
+          - cp Pipfile Pipfile.lock ./
+          - pipenv install -d
+          - python -m unittest discover tests/

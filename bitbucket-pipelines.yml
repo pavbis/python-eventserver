@@ -4,6 +4,5 @@ pipelines:
     - step:
         script:
           - pip3 install pipenv
-          - cp Pipfile Pipfile.lock ./
           - pipenv install -d
           - python -m unittest discover tests/

@@ -11,6 +11,7 @@ from eventsserver.value.objects import Event
 
 class InMemoryReadEventStore(ProvidesEventStreams):
     EVENT_STORE_SELECT_EVENTS_ERROR = 'select events failed'
+    EVENT_STORE_SELECT_STREAMS_ERROR = 'select streams failed'
 
     __will_raise_database_error = False
 
@@ -33,7 +34,13 @@ class InMemoryReadEventStore(ProvidesEventStreams):
                                             'trigger': {'name': '/path/to/script.php', 'type': 'system'}})])
 
     def select_streams(self, expression: ProvidesPredicate) -> Iterator[StreamData]:
-        pass
+        if self.__will_raise_database_error:
+            raise DatabaseError(self.EVENT_STORE_SELECT_STREAMS_ERROR)
+
+        return iter([StreamData.from_list([
+            'c3f390b8-302f-49af-b987-66ab0a931a62', 'unit-test', 1,
+            2, '2019-11-08 08:38:35.806000+00:00', '2019-11-26 09:02:29.418000+00:00'
+        ])])
 
     def select_consumers_for_stream(self, stream_name: StreamName) -> Iterator[ConsumerData]:
         pass

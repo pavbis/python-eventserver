@@ -5,6 +5,7 @@ from typing import Iterator
 from eventsserver.dto.stream_data import StreamData
 from eventsserver.dto.consumer_data import ConsumerData
 from eventsserver.dto.event_data import EventData
+from eventsserver.storage.expressions.select_streams_expressions import ProvidesPredicate
 from pg8000 import Connection
 
 
@@ -22,10 +23,6 @@ class QueriesEvents(object):
         raise NotImplementedError
 
 
-class ContainsSearchCriteria(object):
-    pass
-
-
 class SpecifiesPeriod(object):
     def is_satisfied_by(self, period: Period) -> bool:
         raise NotImplementedError
@@ -37,14 +34,6 @@ class SpecifiesPeriod(object):
         raise NotImplementedError
 
     def period_literal(self) -> str:
-        raise NotImplementedError
-
-
-class ProvidesPredicate(object):
-    def predicate(self) -> str:
-        raise NotImplementedError
-
-    def search_criteria(self) -> ContainsSearchCriteria:
         raise NotImplementedError
 
 
@@ -117,7 +106,23 @@ class PostgreSqlReadEventStore(ProvidesEventStreams):
             return Offset(0 if row is None else int(row[0]))
 
     def select_streams(self, expression: ProvidesPredicate) -> Iterator[StreamData]:
-        pass
+        with self.__connection.cursor() as cursor:
+
+            query = 'SELECT pSR.*,COALESCE(e.eventscount,0) AS "eventsCount", COALESCE(cOF."consumerCount",' \
+                    '0) AS "consumerCount", "firstEventOccurredAt", "lastEventOccurredAt" FROM ' \
+                    '"producerStreamRelations" pSR LEFT JOIN (SELECT COUNT(1) AS eventscount, "streamName" AS ' \
+                    '"streamName", MIN(e."createdAt") as "firstEventOccurredAt", MAX(e."createdAt") as ' \
+                    '"lastEventOccurredAt" FROM events e GROUP BY e."streamName") AS e USING ("streamName") LEFT JOIN ' \
+                    '(SELECT COUNT(DISTINCT("consumerId")) AS "consumerCount", "streamName" FROM "consumerOffsets"  ' \
+                    'GROUP BY "consumerOffsets"."streamName") AS cOF USING ("streamName") %s ORDER BY pSR."streamName" ' \
+                    'DESC' % expression.predicate()
+
+            cursor.execute(query)
+
+            rows = cursor.fetchall()
+
+            for row in rows:
+                yield StreamData.from_list(row)
 
     def select_consumers_for_stream(self, stream_name: StreamName) -> Iterator[ConsumerData]:
         pass

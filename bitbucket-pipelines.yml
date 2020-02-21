@@ -4,3 +4,4 @@ pipelines:
     - step:
         script:
           - python -m unittest discover tests/
+          - pip3 install pipenv

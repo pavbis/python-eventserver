@@ -59,10 +59,10 @@ remove_pycache:
 
 ## Run unit tests.
 run_unittests:
-	$(runbackend) python3 -m pipenv run python -m unittest discover tests/unit/ -v
+	$(runbackend) pipenv run python -m unittest discover tests/unit/ -v
 .PHONY: run_unittests
 
 ## Run integration tests.
 run_interationtests:
-	$(runbackend) python3 -m pipenv run python -m unittest discover tests/integration/ -v
+	$(runbackend) pipenv run python -m unittest discover tests/integration/ -v
 .PHONY: run_interationtests

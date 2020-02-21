@@ -1,0 +1,46 @@
+from eventsserver.dto.consumer_data import ConsumerData
+from eventsserver.dto.event_data import EventData
+from eventsserver.dto.stream_data import StreamData
+from eventsserver.storage.read_event_stores import ProvidesEventStreams, SpecifiesPeriod, ProvidesPredicate, \
+    QueriesEvents
+from eventsserver.value.objects import EventId, EventJson, StreamName, Event
+from pg8000 import DatabaseError
+from typing import Iterator
+from eventsserver.value.objects import Event
+
+
+class InMemoryReadEventStore(ProvidesEventStreams):
+    EVENT_STORE_SELECT_EVENTS_ERROR = 'select events failed'
+
+    __will_raise_database_error = False
+
+    def will_raise_database_error(self) -> None:
+        self.__will_raise_database_error = True
+
+    def reset(self):
+        self.__will_raise_database_error = False
+
+    def select_events(self, query: QueriesEvents) -> Iterator[Event]:
+        if self.__will_raise_database_error:
+            raise DatabaseError(self.EVENT_STORE_SELECT_EVENTS_ERROR)
+
+        return iter([Event.from_event_data({'event': {'name': 'Snickers', 'version': 1, 'id': 'c3f390b8-302f-49af-b987'
+                                                                                              '-66ab0a931a62'},
+                                            'system': {'id': 'alv1', 'name': 'codello alvine',
+                                                       'time': '2019-09-06 13:58:12',
+                                                       'timezone': 'Europe/Berlin'},
+                                            'payload': {'foo': 'bar'},
+                                            'trigger': {'name': '/path/to/script.php', 'type': 'system'}})])
+
+    def select_streams(self, expression: ProvidesPredicate) -> Iterator[StreamData]:
+        pass
+
+    def select_consumers_for_stream(self, stream_name: StreamName) -> Iterator[ConsumerData]:
+        pass
+
+    def select_events_for_stream(self, stream_name: StreamName, period: SpecifiesPeriod,
+                                 expression: ProvidesPredicate) -> Iterator[EventData]:
+        pass
+
+    def read_payload_for_event_id(self, event_id: EventId) -> EventJson:
+        pass

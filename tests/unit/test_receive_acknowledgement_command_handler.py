@@ -19,7 +19,6 @@ class ReceiveAcknowledgementCommandHandlerTest(TestCase):
         event_id = EventId(str(uuid.uuid4()))
 
         command = ReceiveAcknowledgementCommand(consumer_id, stream_name, event_id)
-
         result = self.command_handler.handle(command)
 
         self.assertTrue(result.succeeded())
@@ -34,7 +33,6 @@ class ReceiveAcknowledgementCommandHandlerTest(TestCase):
         event_id = EventId(str(uuid.uuid4()))
 
         command = ReceiveAcknowledgementCommand(consumer_id, stream_name, event_id)
-
         result = self.command_handler.handle(command)
 
         self.assertTrue(result.failure())

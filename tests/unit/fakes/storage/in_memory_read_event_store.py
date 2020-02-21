@@ -12,6 +12,7 @@ from eventsserver.value.objects import Event
 class InMemoryReadEventStore(ProvidesEventStreams):
     EVENT_STORE_SELECT_EVENTS_ERROR = 'select events failed'
     EVENT_STORE_SELECT_STREAMS_ERROR = 'select streams failed'
+    EVENT_STORE_SELECT_CONSUMERS_ERROR = 'select consumers failed'
 
     __will_raise_database_error = False
 
@@ -43,7 +44,12 @@ class InMemoryReadEventStore(ProvidesEventStreams):
         ])])
 
     def select_consumers_for_stream(self, stream_name: StreamName) -> Iterator[ConsumerData]:
-        pass
+        if self.__will_raise_database_error:
+            raise DatabaseError(self.EVENT_STORE_SELECT_CONSUMERS_ERROR)
+
+        return iter([ConsumerData.from_list(
+            ['c3f390b8-302f-49af-b987-66ab0a931a62', 1, '2019-11-08 08:38:35.806000+00:00', 'unit-test', 55.5, 12]
+        )])
 
     def select_events_for_stream(self, stream_name: StreamName, period: SpecifiesPeriod,
                                  expression: ProvidesPredicate) -> Iterator[EventData]:

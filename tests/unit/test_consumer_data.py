@@ -5,8 +5,8 @@ from eventsserver.dto.consumer_data import ConsumerData
 class ConsumerDataTest(TestCase):
     def test_consumer_data_can_be_created_from_list(self) -> None:
         primitive_list = [
-            'c3f390b8-302f-49af-b987-66ab0a931a62', 'unit-test', 1,
-            '2019-11-08 08:38:35.806000+00:00', 55.5, 12
+            'c3f390b8-302f-49af-b987-66ab0a931a62', 1,
+            '2019-11-08 08:38:35.806000+00:00', 'unit-test', 55.5, 12
         ]
 
         consumer_data = ConsumerData.from_list(primitive_list)

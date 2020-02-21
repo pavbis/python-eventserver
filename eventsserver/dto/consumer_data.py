@@ -16,9 +16,9 @@ class ConsumerData(object):
         instance = cls.__new__(cls)
 
         instance.__consumer_id = ConsumerId(consumer_data[0])
-        instance.__event_name = EventName(consumer_data[1])
-        instance.__offset = Offset(consumer_data[2])
-        instance.__moved_at = OccurredOn(consumer_data[3])
+        instance.__offset = Offset(consumer_data[1])
+        instance.__moved_at = OccurredOn(consumer_data[2])
+        instance.__event_name = EventName(consumer_data[3])
         instance.__consumed_percentage = ConsumedPercentage(consumer_data[4])
         instance.__behind = Behind(consumer_data[5])
 

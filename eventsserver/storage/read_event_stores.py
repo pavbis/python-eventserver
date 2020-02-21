@@ -107,7 +107,6 @@ class PostgreSqlReadEventStore(ProvidesEventStreams):
 
     def select_streams(self, expression: ProvidesPredicate) -> Iterator[StreamData]:
         with self.__connection.cursor() as cursor:
-
             query = 'SELECT pSR.*,COALESCE(e.eventscount,0) AS "eventsCount", COALESCE(cOF."consumerCount",' \
                     '0) AS "consumerCount", "firstEventOccurredAt", "lastEventOccurredAt" FROM ' \
                     '"producerStreamRelations" pSR LEFT JOIN (SELECT COUNT(1) AS eventscount, "streamName" AS ' \
@@ -125,7 +124,27 @@ class PostgreSqlReadEventStore(ProvidesEventStreams):
                 yield StreamData.from_list(row)
 
     def select_consumers_for_stream(self, stream_name: StreamName) -> Iterator[ConsumerData]:
-        pass
+        with self.__connection.cursor() as cursor:
+            query = '''
+            SELECT
+               cOF."consumerId",
+               cOF."offset",
+               cOF."movedAt",
+               e."eventName",
+               ROUND(("offset" * 100.0) / COUNT(e."eventId"), 2) AS "consumedPercentage",
+               COUNT(e."eventId") - "offset" AS "behind"
+            FROM "consumerOffsets" cOF
+            INNER JOIN events e USING ("eventName", "streamName")
+            WHERE cOF."streamName" = %s
+            GROUP BY  e."eventName", cOF."offset", cOF."consumerId", cOF."movedAt"
+            '''
+
+            cursor.execute(query, [str(stream_name)])
+
+            rows = cursor.fetchall()
+
+            for row in rows:
+                yield ConsumerData.from_list(row)
 
     def select_events_for_stream(self, stream_name: StreamName, period: SpecifiesPeriod,
                                  expression: ProvidesPredicate) -> Iterator[EventData]:

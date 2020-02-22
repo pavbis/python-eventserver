@@ -13,6 +13,10 @@ class InMemoryReadEventStore(ProvidesEventStreams):
     EVENT_STORE_SELECT_EVENTS_ERROR = 'select events failed'
     EVENT_STORE_SELECT_STREAMS_ERROR = 'select streams failed'
     EVENT_STORE_SELECT_CONSUMERS_ERROR = 'select consumers failed'
+    EVENT_STORE_READ_EVENT_PAYLOAD_ERROR = 'read event payload failed'
+    EVENT_PAYLOAD = '{"event": {"id": "ebf1e616-ca51-4f76-908d-d5781c0ad550", "name": "Snickers", "version": 1}, ' \
+                    '"system": {"id": "alv1", "name": "codello alvine", "time": "2019-09-06 13:58:12", "timezone": ' \
+                    '"Europe/Berlin"}, "payload": {}, "trigger": {"name": "/path/to/script.php", "type": "system"}} '
 
     __will_raise_database_error = False
 
@@ -56,4 +60,7 @@ class InMemoryReadEventStore(ProvidesEventStreams):
         pass
 
     def read_payload_for_event_id(self, event_id: EventId) -> EventJson:
-        pass
+        if self.__will_raise_database_error:
+            raise DatabaseError(self.EVENT_STORE_READ_EVENT_PAYLOAD_ERROR)
+
+        return EventJson(self.EVENT_PAYLOAD)

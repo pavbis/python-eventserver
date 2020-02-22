@@ -6,7 +6,9 @@ from eventsserver.dto.stream_data import StreamData
 from eventsserver.dto.consumer_data import ConsumerData
 from eventsserver.dto.event_data import EventData
 from eventsserver.storage.expressions.select_streams_expressions import ProvidesPredicate
+from eventsserver.storage.exceptions import EventStoreError
 from pg8000 import Connection
+import json
 
 
 class QueriesEvents(object):
@@ -151,4 +153,19 @@ class PostgreSqlReadEventStore(ProvidesEventStreams):
         pass
 
     def read_payload_for_event_id(self, event_id: EventId) -> EventJson:
-        pass
+        with self.__connection.cursor() as cursor:
+            query = '''
+            SELECT e.event::jsonb as "payLoad"
+                    FROM events e
+                    WHERE e."eventId" = %s
+                    LIMIT 1
+            '''
+
+            cursor.execute(query, [str(event_id)])
+            row = cursor.fetchone()
+
+            if row is None:
+                raise EventStoreError('Event with id %s not found.' % str(event_id))
+
+            return EventJson(json.dumps(row[0]))
+

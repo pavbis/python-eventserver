@@ -6,7 +6,7 @@ pipelines:
           - pip3 install pipenv
           - pipenv install -d
           - pipenv run python -m unittest discover tests/unit/ -v
-          - apt-get update && sudo apt-get install -y postgresql-client
+          - apt-get update && apt-get install -y postgresql-client
           - psql -c 'SELECT version();' -U root
         services:
           - postgres

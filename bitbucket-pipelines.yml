@@ -6,6 +6,7 @@ pipelines:
           - pip3 install pipenv
           - pipenv install -d
           - pipenv run python -m unittest discover tests/unit/ -v
+          - - psql -c 'SELECT version();' -U root
         services:
           - postgres
 

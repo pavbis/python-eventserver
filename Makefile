@@ -57,6 +57,11 @@ remove_pycache:
 	find . -type d -name __pycache__ -exec rm -r {} \+
 .PHONY: remove_pycache
 
+## Run pylint.
+run_pylint:
+	$(runbackend) pipenv run python -m pylint eventsserver/
+.PHONY: run_pylint
+
 ## Run unit tests.
 run_unittests:
 	$(runbackend) pipenv run python -m unittest discover tests/unit/ -v

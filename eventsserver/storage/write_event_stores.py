@@ -1,4 +1,5 @@
 from typing import Optional
+from pg8000 import Connection
 from eventsserver.value.objects import (
     StreamName,
     ProducerId,
@@ -9,7 +10,6 @@ from eventsserver.value.objects import (
     Offset,
     EventCount
 )
-from pg8000 import Connection
 from eventsserver.storage.exceptions import StreamReservedForProducer, EventStoreError
 
 

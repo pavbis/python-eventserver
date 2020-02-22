@@ -1,11 +1,11 @@
+from pg8000 import DatabaseError
+from typing import Iterator
 from eventsserver.dto.consumer_data import ConsumerData
 from eventsserver.dto.event_data import EventData
 from eventsserver.dto.stream_data import StreamData
 from eventsserver.storage.read_event_stores import ProvidesEventStreams, SpecifiesPeriod, ProvidesPredicate, \
     QueriesEvents
-from eventsserver.value.objects import EventId, EventJson, StreamName, Event
-from pg8000 import DatabaseError
-from typing import Iterator
+from eventsserver.value.objects import EventId, EventJson, StreamName
 from eventsserver.value.objects import Event
 
 

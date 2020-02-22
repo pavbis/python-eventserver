@@ -1,3 +1,5 @@
+from pg8000 import Connection
+import json
 from eventsserver.value.objects import (
     ConsumerId, StreamName, EventName, MaxEventCount, Period, EventId, EventJson, Offset, Event
 )
@@ -7,8 +9,6 @@ from eventsserver.dto.consumer_data import ConsumerData
 from eventsserver.dto.event_data import EventData
 from eventsserver.storage.expressions.select_streams_expressions import ProvidesPredicate
 from eventsserver.storage.exceptions import EventStoreError
-from pg8000 import Connection
-import json
 
 
 class QueriesEvents:

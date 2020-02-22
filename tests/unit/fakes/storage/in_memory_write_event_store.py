@@ -1,6 +1,6 @@
+from pg8000 import DatabaseError
 from eventsserver.storage.write_event_stores import PersistsEventStreams
 from eventsserver.value.objects import StreamName, ConsumerId, EventName, Offset, EventId, ProducerId, Event
-from pg8000 import DatabaseError
 
 
 class InMemoryWriteEventStore(PersistsEventStreams):

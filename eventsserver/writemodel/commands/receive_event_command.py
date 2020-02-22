@@ -1,7 +1,7 @@
 from eventsserver.value.objects import EventId, ProducerId, StreamName, EventJson
 
 
-class ReceiveEventCommand(object):
+class ReceiveEventCommand:
     def __init__(self, event_id: EventId, producer_id: ProducerId, stream_name: StreamName, event_json: EventJson):
         self.__event_id = event_id
         self.__producer_id = producer_id

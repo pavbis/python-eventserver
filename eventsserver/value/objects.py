@@ -8,7 +8,7 @@ class InvalidArgument(ValueError):
     """Throw argument is not valid."""
 
 
-class StreamName(object):
+class StreamName:
     def __init__(self, primitive_value: str):
         if not primitive_value:
             raise InvalidArgument('stream name can not not be empty.')
@@ -18,7 +18,7 @@ class StreamName(object):
         return self.__primitive_value
 
 
-class ProducerId(object):
+class ProducerId:
     def __init__(self, primitive_value):
         try:
             uuid.UUID(str(primitive_value))
@@ -36,7 +36,7 @@ class ProducerId(object):
         return self.__primitive_value
 
 
-class EventId(object):
+class EventId:
     def __init__(self, primitive_value):
         try:
             uuid.UUID(str(primitive_value))
@@ -48,7 +48,7 @@ class EventId(object):
         return self.__primitive_value
 
 
-class EventName(object):
+class EventName:
     def __init__(self, primitive_value: str):
         if not primitive_value:
             raise InvalidArgument('event name can not not be empty.')
@@ -58,7 +58,7 @@ class EventName(object):
         return self.__primitive_value
 
 
-class EventVersion(object):
+class EventVersion:
     def __init__(self, primitive_value: int):
         if primitive_value < 1:
             raise InvalidArgument('Event version cannot be lower than 1.')
@@ -68,7 +68,7 @@ class EventVersion(object):
         return self.__primitive_value
 
 
-class SystemId(object):
+class SystemId:
     def __init__(self, primitive_value: str):
         if not primitive_value:
             raise InvalidArgument('System ID cannot be empty.')
@@ -78,7 +78,7 @@ class SystemId(object):
         return self.__primitive_value
 
 
-class SystemName(object):
+class SystemName:
     def __init__(self, primitive_value: str):
         if not primitive_value:
             raise InvalidArgument('System name cannot be empty.')
@@ -88,7 +88,7 @@ class SystemName(object):
         return self.__primitive_value
 
 
-class TimeZone(object):
+class TimeZone:
     def __init__(self, primitive_value: str):
         if primitive_value not in pytz.all_timezones:
             raise InvalidArgument('Unknown or bad timezone.')
@@ -98,7 +98,7 @@ class TimeZone(object):
         return self.__primitive_value
 
 
-class TriggerType(object):
+class TriggerType:
     def __init__(self, primitive_value: str):
         if not primitive_value:
             raise InvalidArgument('Trigger type cannot be empty.')
@@ -108,7 +108,7 @@ class TriggerType(object):
         return self.__primitive_value
 
 
-class TriggerName(object):
+class TriggerName:
     def __init__(self, primitive_value: str):
         if not primitive_value:
             raise InvalidArgument('Trigger name cannot be empty.')
@@ -118,7 +118,7 @@ class TriggerName(object):
         return self.__primitive_value
 
 
-class PayLoad(object):
+class PayLoad:
     def __init__(self, primitive_value: dict):
         if not isinstance(primitive_value, dict):
             raise InvalidArgument('Payload must be an dict.')
@@ -128,7 +128,7 @@ class PayLoad(object):
         return str(self.__primitive_value)
 
 
-class EventJson(object):
+class EventJson:
     def __init__(self, primitive_value: str):
         try:
             json.loads(primitive_value)
@@ -153,7 +153,7 @@ class EventJson(object):
         return Event.from_event_data(event_data)
 
 
-class ConsumerId(object):
+class ConsumerId:
     def __init__(self, primitive_value):
         try:
             uuid.UUID(str(primitive_value))
@@ -165,7 +165,7 @@ class ConsumerId(object):
         return self.__primitive_value
 
 
-class Offset(object):
+class Offset:
     def __init__(self, primitive_value: int):
         if primitive_value < 0:
             raise InvalidArgument('Offset cannot be lower than zero.')
@@ -185,7 +185,7 @@ class Offset(object):
         return self
 
 
-class EventCount(object):
+class EventCount:
     def __init__(self, primitive_value: int):
         if primitive_value < 0:
             raise InvalidArgument('Event count cannot be lower than zero.')
@@ -195,7 +195,7 @@ class EventCount(object):
         return self.__primitive_value
 
 
-class MaxEventCount(object):
+class MaxEventCount:
     def __init__(self, primitive_value: int):
         if primitive_value < 1:
             raise InvalidArgument('Max consume count must be greater than 0.')
@@ -205,7 +205,7 @@ class MaxEventCount(object):
         return self.__primitive_value
 
 
-class ConsumerCount(object):
+class ConsumerCount:
     def __init__(self, primitive_value: int):
         if primitive_value < 0:
             raise InvalidArgument('Consumer count cannot be lower than zero.')
@@ -215,7 +215,7 @@ class ConsumerCount(object):
         return self.__primitive_value
 
 
-class OccurredOn(object):
+class OccurredOn:
     def __init__(self, date_time: datetime):
         self.__date_time = date_time
 
@@ -223,7 +223,7 @@ class OccurredOn(object):
         return str(self.__date_time)
 
 
-class ConsumedPercentage(object):
+class ConsumedPercentage:
     def __init__(self, primitive_value: float):
         self.__primitive_value = primitive_value
 
@@ -231,7 +231,7 @@ class ConsumedPercentage(object):
         return self.__primitive_value
 
 
-class Behind(object):
+class Behind:
     def __init__(self, primitive_value: int):
         self.__primitive_value = primitive_value
 
@@ -239,7 +239,7 @@ class Behind(object):
         return self.__primitive_value
 
 
-class Period(object):
+class Period:
     def __init__(self, primitive_value: str):
         self.__primitive_value = primitive_value
 
@@ -247,7 +247,7 @@ class Period(object):
         return self.__primitive_value
 
 
-class Event(object):
+class Event:
     def __init__(self,
                  event_id: EventId, event_name: EventName, event_version: EventVersion,
                  system_id: SystemId, system_name: SystemName, time_zone: TimeZone,

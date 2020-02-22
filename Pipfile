@@ -10,6 +10,7 @@ requests = "*"
 psycopg2-binary = "*"
 pg8000 = "*"
 pytz = "*"
+pylint = "*"
 
 [requires]
 python_version = "3.7"

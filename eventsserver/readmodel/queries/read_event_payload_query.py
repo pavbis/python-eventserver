@@ -1,7 +1,7 @@
 from eventsserver.value.objects import EventId
 
 
-class ReadEventPayloadQuery(object):
+class ReadEventPayloadQuery:
     def __init__(self, event_id: EventId):
         self.__event_id = event_id
 

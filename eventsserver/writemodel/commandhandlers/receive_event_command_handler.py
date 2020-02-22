@@ -4,7 +4,7 @@ from eventsserver.writemodel.results.receive_event_result import ReceiveEventRes
 from eventsserver.writemodel.constants.result_type import ResultType
 
 
-class ReceiveEventCommandHandler(object):
+class ReceiveEventCommandHandler:
     def __init__(self, event_store: PersistsEventStreams):
         self.__event_store = event_store
 

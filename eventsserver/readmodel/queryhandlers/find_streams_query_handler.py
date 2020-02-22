@@ -4,7 +4,7 @@ from eventsserver.readmodel.results.find_streams_result import FindStreamsResult
 from eventsserver.readmodel.constants.result_type import ResultType
 
 
-class FindStreamsQueryHandler(object):
+class FindStreamsQueryHandler:
     def __init__(self, event_store: ProvidesEventStreams):
         self.__even_store = event_store
 

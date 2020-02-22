@@ -11,7 +11,7 @@ from pg8000 import Connection
 import json
 
 
-class QueriesEvents(object):
+class QueriesEvents:
     def get_consumer_id(self) -> ConsumerId:
         raise NotImplementedError
 
@@ -25,7 +25,7 @@ class QueriesEvents(object):
         raise NotImplementedError
 
 
-class SpecifiesPeriod(object):
+class SpecifiesPeriod:
     def is_satisfied_by(self, period: Period) -> bool:
         raise NotImplementedError
 
@@ -39,7 +39,7 @@ class SpecifiesPeriod(object):
         raise NotImplementedError
 
 
-class ProvidesEventStreams(object):
+class ProvidesEventStreams:
     def select_events(self, query: QueriesEvents) -> Iterator[Event]:
         raise NotImplementedError
 

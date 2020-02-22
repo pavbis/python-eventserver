@@ -13,7 +13,7 @@ from pg8000 import Connection
 from eventsserver.storage.exceptions import StreamReservedForProducer, EventStoreError
 
 
-class PersistsEventStreams(object):
+class PersistsEventStreams:
     def record_event(self, producer_id: ProducerId, stream_name: StreamName, event: Event) -> None:
         raise NotImplementedError
 

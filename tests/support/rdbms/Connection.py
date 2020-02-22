@@ -7,7 +7,7 @@ from threading import Lock
 logger = logging.getLogger(__name__)
 
 
-class Connection(object):
+class Connection:
 
     def __init__(self):
         self._lock = Lock()

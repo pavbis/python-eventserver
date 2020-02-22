@@ -4,7 +4,7 @@ from eventsserver.writemodel.results.receive_acknowledgement_result import Recei
 from eventsserver.writemodel.constants.result_type import ResultType
 
 
-class ReceiveAcknowledgementCommandHandler(object):
+class ReceiveAcknowledgementCommandHandler:
     def __init__(self, event_store: PersistsEventStreams):
         self.__event_store = event_store
 

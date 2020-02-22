@@ -1,7 +1,7 @@
 from eventsserver.value.objects import ConsumerId, StreamName, EventName, Offset
 
 
-class UpdateConsumerOffsetCommand(object):
+class UpdateConsumerOffsetCommand:
     def __init__(self, consumer_id: ConsumerId, stream_name: StreamName, event_name: EventName, offset: Offset):
         self.__consumer_id = consumer_id
         self.__stream_name = stream_name

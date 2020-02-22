@@ -1,7 +1,7 @@
 from eventsserver.value.objects import StreamName
 
 
-class FindConsumersQuery(object):
+class FindConsumersQuery:
     def __init__(self, stream_name: StreamName):
         self.__stream_name = stream_name
 

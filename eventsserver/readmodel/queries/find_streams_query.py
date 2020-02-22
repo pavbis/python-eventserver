@@ -1,7 +1,7 @@
 from eventsserver.storage.expressions.select_streams_expressions import ProvidesPredicate
 
 
-class FindStreamsQuery(object):
+class FindStreamsQuery:
     def __init__(self, expression: ProvidesPredicate):
         self.__expression = expression
 

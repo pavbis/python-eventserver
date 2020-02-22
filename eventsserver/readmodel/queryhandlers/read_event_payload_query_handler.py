@@ -4,7 +4,7 @@ from eventsserver.readmodel.results.read_event_payload_result import ReadEventPa
 from eventsserver.readmodel.constants.result_type import ResultType
 
 
-class ReadEventPayloadQueryHandler(object):
+class ReadEventPayloadQueryHandler:
     def __init__(self, event_store: ProvidesEventStreams):
         self.__event_store = event_store
 

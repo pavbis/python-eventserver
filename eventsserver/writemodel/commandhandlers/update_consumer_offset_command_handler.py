@@ -4,7 +4,7 @@ from eventsserver.writemodel.results.update_consumer_offset_result import Update
 from eventsserver.writemodel.constants.result_type import ResultType
 
 
-class UpdateConsumerOffsetCommandHandler(object):
+class UpdateConsumerOffsetCommandHandler:
     def __init__(self, event_store: PersistsEventStreams):
         self.__event_store = event_store
 

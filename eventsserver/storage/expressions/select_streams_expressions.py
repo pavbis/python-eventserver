@@ -1,7 +1,7 @@
 from abc import ABC
 
 
-class ContainsSearchCriteria(object):
+class ContainsSearchCriteria:
     pass
 
 
@@ -13,7 +13,7 @@ class SearchArgument(ContainsSearchCriteria):
         return self.__argument
 
 
-class ProvidesPredicate(object):
+class ProvidesPredicate:
     def predicate(self) -> str:
         raise NotImplementedError
 

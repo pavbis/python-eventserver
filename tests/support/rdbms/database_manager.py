@@ -2,7 +2,7 @@ import pg8000
 from eventsserver.config.parser import config
 
 
-class DataBaseManager(object):
+class DataBaseManager:
     __DATABASE_INI_FILE = 'eventsserver/config/database.ini'
     __SECTION = 'postgresql'
 

@@ -4,7 +4,7 @@ from eventsserver.readmodel.results.find_consumers_result import FindConsumersRe
 from eventsserver.readmodel.constants.result_type import ResultType
 
 
-class FindConsumersForStreamQueryHandler(object):
+class FindConsumersForStreamQueryHandler:
     def __init__(self, event_store: ProvidesEventStreams):
         self.__event_store = event_store
 

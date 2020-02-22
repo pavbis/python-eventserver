@@ -3,7 +3,7 @@ from eventsserver.value.objects import (
 )
 
 
-class StreamData(object):
+class StreamData:
     __producer_id = None
     __stream_name = None
     __events_count = None

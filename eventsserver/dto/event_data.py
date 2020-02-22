@@ -3,7 +3,7 @@ from eventsserver.value.objects import (
 )
 
 
-class EventData(object):
+class EventData:
     __event_name = None
     __created_at = None
     __consumer_ids = []

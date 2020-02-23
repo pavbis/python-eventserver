@@ -15,7 +15,7 @@ pipelines:
           - chmod +x /usr/local/bin/docker-compose
           - docker-compose up -d
           - docker-compose ps
-          - pipenv run python create_schema.py
+          - docker-compose run --rm backend pipenv run python create_schema.py
 
 definitions:
   services:

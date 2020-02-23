@@ -2,6 +2,10 @@ image: python:3.7.3
 pipelines:
   default:
     - step:
+        services:
+          - docker
+        caches:
+          - docker
         script:
           - pip3 install pipenv
           - pipenv install -d
@@ -14,6 +18,10 @@ pipelines:
         #services:
           #- postgres
 
+definitions:
+  services:
+    docker:
+      memory: 7168
 #definitions:
   #services:
     #postgres:

@@ -8,6 +8,7 @@ pipelines:
           - pipenv run python -m unittest discover tests/unit/ -v
           # Install docker-compose via pip
           - pip3 install docker-compose
+          - docker-compose up -d
           #- pipenv run python create_schema.py
         #services:
           #- postgres

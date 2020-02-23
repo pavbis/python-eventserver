@@ -6,11 +6,10 @@ pipelines:
           - pip3 install pipenv
           - pipenv install -d
           - pipenv run python -m unittest discover tests/unit/ -v
-          # Install docker-compose via pip
           - curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-Linux-x86_64 -o /usr/local/bin/docker-compose
-            - chmod +x /usr/local/bin/docker-compose
-            - docker-compose up -d
-            - docker-compose ps
+          - chmod +x /usr/local/bin/docker-compose
+          - docker-compose up -d
+          - docker-compose ps
           #- pipenv run python create_schema.py
         #services:
           #- postgres

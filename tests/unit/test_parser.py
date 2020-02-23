@@ -14,7 +14,7 @@ class MyTestCase(TestCase):
             config('eventsserver/config/database.ini', 'postgresql'),
             {
                 'database': 'python_test',
-                'host': 'postgres',
+                'host': 'localhost',
                 'password': 'root',
                 'user': 'root'
             }

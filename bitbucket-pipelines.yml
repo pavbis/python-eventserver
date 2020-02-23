@@ -7,8 +7,8 @@ pipelines:
           - pipenv install -d
           - pipenv run python -m unittest discover tests/unit/ -v
           #- pipenv run python create_schema.py
-        services:
-          - postgres
+        #services:
+          #- postgres
 
 #definitions:
   #services:

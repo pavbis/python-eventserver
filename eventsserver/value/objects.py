@@ -346,3 +346,62 @@ class SetEncoder(json.JSONEncoder):
         if isinstance(obj, set):
             return list(obj)
         return json.JSONEncoder.default(self, obj)
+
+
+'''
+Search objects.
+'''
+
+
+class SearchTerm:
+    def __init__(self, primitive_value: str):
+        self.__primitive_value = primitive_value
+
+    def __str__(self) -> str:
+        return self.__primitive_value
+
+
+class ProvidesAggregatedJson:
+    pass
+
+
+class EmptyJson(ProvidesAggregatedJson):
+    def __str__(self) -> str:
+        return '{}'
+
+
+class AggregatedJson(ProvidesAggregatedJson):
+    def __init__(self, primitive_value: str):
+        try:
+            json.loads(primitive_value)
+        except ValueError:
+            raise InvalidArgument('Value is not a JSON string.')
+        self.__primitive_value = primitive_value
+
+    def __str__(self) -> str:
+        return self.__primitive_value
+
+
+class SearchResult:
+    __label = None
+    __category = None
+    __url = None
+
+    @classmethod
+    def from_list(cls, search_data: []):
+        instance = cls.__new__(cls)
+
+        instance.__label = search_data[0]
+        instance.__category = search_data[1]
+        instance.__url = search_data[2]
+
+        return instance
+
+    def get_label(self) -> str:
+        return self.__label
+
+    def get_category(self) -> str:
+        return self.__category
+
+    def get_url(self) -> str:
+        return self.__url

@@ -10,11 +10,11 @@ pipelines:
         services:
           - postgres
 
-definitions:
-  services:
-    postgres:
-      image: postgres
-      variables:
-        POSTGRES_DB: 'python_test'
-        POSTGRES_USER: 'root'
-        POSTGRES_PASSWORD: 'root'
+#definitions:
+  #services:
+    #postgres:
+      #image: postgres
+      #variables:
+        #POSTGRES_DB: 'python_test'
+        #POSTGRES_USER: 'root'
+        #POSTGRES_PASSWORD: 'root'

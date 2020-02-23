@@ -15,9 +15,9 @@ pipelines:
           - chmod +x /usr/local/bin/docker-compose
           - docker-compose up -d
           - docker-compose ps
+    - step:
+        script:
           - pipenv run python create_schema.py
-        #services:
-          #- postgres
 
 definitions:
   services:

@@ -2,6 +2,7 @@ image: python:3.7.3
 pipelines:
   default:
     - step:
+        size: 2x   # double memory (8GB) for this step
         services:
           - docker
         caches:

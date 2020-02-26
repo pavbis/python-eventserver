@@ -34,7 +34,7 @@ runbackend = $(bin) run --rm backend
 
 ## Start docker containers.
 dstart:
-	$(bin) up -d
+	$(bin) build --pull --parallel && $(bin) up -d --force-recreate
 .PHONY: dstart
 
 ## Pull docker containers.
@@ -44,7 +44,7 @@ dpull:
 
 ## Stop docker containers.
 dstop:
-	$(bin) stop
+	$(bin) down
 .PHONY: dstop
 
 ## Remove unused docker data.

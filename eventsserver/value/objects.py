@@ -405,3 +405,21 @@ class SearchResult:
 
     def get_url(self) -> str:
         return self.__url
+
+
+class DateRange:
+    def __init__(self, start: datetime, end: datetime):
+        self.__start = start
+        self.__end = end
+
+    def is_valid(self) -> bool:
+        if self.__start > self.__end:
+            raise InvalidArgument('End date must be greater than start date.')
+
+        return True
+
+    def get_start(self) -> datetime:
+        return self.__start
+
+    def get_end(self) -> datetime:
+        return self.__end

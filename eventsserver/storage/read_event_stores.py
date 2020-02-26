@@ -9,6 +9,7 @@ from eventsserver.dto.consumer_data import ConsumerData
 from eventsserver.dto.event_data import EventData
 from eventsserver.storage.expressions.select_streams_expressions import ProvidesPredicate
 from eventsserver.storage.exceptions import EventStoreError
+from eventsserver.search.specifications.period_specifications import SpecifiesPeriod
 
 
 class QueriesEvents:
@@ -22,20 +23,6 @@ class QueriesEvents:
         raise NotImplementedError
 
     def get_max_event_count(self) -> MaxEventCount:
-        raise NotImplementedError
-
-
-class SpecifiesPeriod:
-    def is_satisfied_by(self, period: Period) -> bool:
-        raise NotImplementedError
-
-    def and_expression(self) -> str:
-        raise NotImplementedError
-
-    def period(self) -> str:
-        raise NotImplementedError
-
-    def period_literal(self) -> str:
         raise NotImplementedError
 
 

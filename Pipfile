@@ -11,6 +11,7 @@ psycopg2-binary = "*"
 pg8000 = "*"
 pytz = "*"
 pylint = "*"
+prometheus-client = "*"
 
 [requires]
 python_version = "3.8"

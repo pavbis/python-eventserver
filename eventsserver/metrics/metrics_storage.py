@@ -28,10 +28,9 @@ class PostgreSqlMetricsStorage(ProvidesMetrics):
                     FROM "producerStreamRelations" pSR'''
             )
 
-            rows = cursor.fetchall()
+            row = cursor.fetchone()
 
-            for row in rows:
-                yield StreamCount(row[1])
+            return StreamCount(row[0])
 
     def events_in_streams_with_owner(self) -> Iterator[StreamTotals]:
         with self.__connection.cursor() as cursor:

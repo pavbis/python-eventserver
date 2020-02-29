@@ -1,5 +1,5 @@
 from unittest import TestCase
-from eventsserver.config.parser import *
+from eventsserver.rdbms.parser import *
 
 
 class MyTestCase(TestCase):
@@ -11,7 +11,7 @@ class MyTestCase(TestCase):
     def test_it_returns_section_if_section_exists(self):
 
         self.assertEqual(
-            config('eventsserver/config/database.ini', 'postgresql'),
+            config('eventsserver/rdbms/database.ini', 'postgresql'),
             {
                 'database': 'python_test',
                 'host': 'postgres',

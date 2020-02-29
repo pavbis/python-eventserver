@@ -1,7 +1,6 @@
-from pg8000 import Connection
 import json
 from eventsserver.value.objects import (
-    ConsumerId, StreamName, EventName, MaxEventCount, Period, EventId, EventJson, Offset, Event
+    ConsumerId, StreamName, EventName, MaxEventCount, EventId, EventJson, Offset, Event
 )
 from typing import Iterator
 from eventsserver.dto.stream_data import StreamData
@@ -10,6 +9,7 @@ from eventsserver.dto.event_data import EventData
 from eventsserver.storage.expressions.select_streams_expressions import ProvidesPredicate
 from eventsserver.storage.exceptions import EventStoreError
 from eventsserver.search.specifications.period_specifications import SpecifiesPeriod
+from eventsserver.rdbms.connection import Connection
 
 
 class QueriesEvents:

@@ -1,15 +1,15 @@
-import pg8000
-from eventsserver.config.parser import config
+import psycopg2
+from eventsserver.rdbms.parser import config
 
 
 class DataBaseManager:
-    __DATABASE_INI_FILE = 'eventsserver/config/database.ini'
+    __DATABASE_INI_FILE = 'eventsserver/rdbms/database.ini'
     __SECTION = 'postgresql'
 
     def connection(self):
         connection_parameters = config(self.__DATABASE_INI_FILE, self.__SECTION)
 
-        return pg8000.connect(**connection_parameters)
+        return psycopg2.connect(**connection_parameters)
 
     def create_schema(self):
         connection = self.connection()

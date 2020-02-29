@@ -12,6 +12,7 @@ pg8000 = "*"
 pytz = "*"
 pylint = "*"
 prometheus-client = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.8"

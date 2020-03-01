@@ -8,7 +8,7 @@ class FakeAutData(ProvidesAuthorisationData):
         return [BasicAuthCredentials.from_primitives('foo', 'bar')]
 
 
-class USerNamePasswordCheckerTest(TestCase):
+class UsernamePasswordPermissionCheckerTest(TestCase):
     def setUp(self) -> None:
         self.auth_data = FakeAutData()
         self.checker = UsernamePasswordPermissionChecker(self.auth_data)

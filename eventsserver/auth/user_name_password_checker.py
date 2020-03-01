@@ -1,4 +1,5 @@
 from eventsserver.auth.auth_types import BasicAuthCredentials
+from secrets import compare_digest
 
 
 class ProvidesAuthorisationData:
@@ -11,7 +12,7 @@ class UsernamePasswordPermissionChecker:
         self.__auth_data = auth_data
 
     def has_access(self, user_name: str, password: str) -> bool:
-        if user_name is '' or password is '':
+        if user_name == '' or compare_digest(password, ''):
             return False
 
         provided_credentials = BasicAuthCredentials.from_primitives(user_name, password)

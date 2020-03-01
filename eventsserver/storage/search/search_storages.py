@@ -1,5 +1,5 @@
 from typing import Iterator
-from pg8000 import Connection, PGJson
+from pg8000 import Connection
 from eventsserver.value.objects import ProvidesAggregatedJson, SearchTerm, AggregatedJson, EmptyJson, SearchResult
 
 

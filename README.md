@@ -124,22 +124,21 @@ docker-composer up -d
 
 This will automatically:
 
-* Build all necessary docker images for `php-fpm`, `php-cli` and `composer`
-* Run the command `composer update -o -v` in the project root
+* Build all necessary docker images for `python` and `postgres`
+
+### Install dependencies
+
+```bash
+docker-compose run --rm backend pipenv install -d
+```
 
 ### Run tests
 
 ```bash
-docker-compose run php-cli vendor/bin/phpunit.phar -c build
+docker-compose run --rm backend pipenv run python -m unittest discover tests/unit/ -v
 ``` 
 
-This will execute all unit and integration tests.
-
-### Run static code analysis
-
-```bash
-docker-compose run php-cli vendor/bin/phpstan.phar analyze --level max src
-```
+This will execute all unit tests.
 
 ### Using Makefile
 Alternatively the Makefile could be used for executing some tasks locally.

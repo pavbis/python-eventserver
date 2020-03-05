@@ -21,6 +21,4 @@ class UsernamePasswordPermissionChecker:
             (allowed_user for allowed_user in self.__auth_data.get_user_accounts() if allowed_user.__eq__(provided_credentials)), None
         )
 
-        if allowed_user is None:
-            return False
-        return True
+        return False if allowed_user is None else True

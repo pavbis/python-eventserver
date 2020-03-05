@@ -9,6 +9,7 @@ class EventServerCollector(object):
     __METRIC_CONSUMERS_TOTAL = 'consumers'
     __METRIC_PRODUCERS_TOTAL = 'producers'
     __METRIC_CONSUMER_OFFSET = 'consumer_offset'
+    __TOTAL = '_total'
 
     def __init__(self, storage: ProvidesMetrics):
         self.__storage = storage
@@ -30,7 +31,7 @@ class EventServerCollector(object):
 
         for events_in_stream in self.__storage.events_in_streams_with_owner():
             events_in_stream_metric.add_sample(
-                events_in_stream_metric.name + '_total',
+                events_in_stream_metric.name + self.__TOTAL,
                 {
                     "streamName": str(events_in_stream.get_stream_name()),
                     'producerId': str(events_in_stream.get_producer_id())
@@ -50,7 +51,7 @@ class EventServerCollector(object):
 
         for consumer_total in self.__storage.consumers_in_stream():
             consumers_total_metric.add_sample(
-                consumers_total_metric.name + '_total',
+                consumers_total_metric.name + self.__TOTAL,
                 {'streamName': str(consumer_total.get_stream_name())},
                 int(consumer_total.get_consumers_count())
             )
@@ -78,7 +79,7 @@ class EventServerCollector(object):
 
         for consumer_offset in self.__storage.consumer_offsets():
             consumers_offset_metric.add_sample(
-                consumers_offset_metric.name + '_total',
+                consumers_offset_metric.name + self.__TOTAL,
                 {
                     'streamName': str(consumer_offset.get_stream_name()),
                     'eventName': str(consumer_offset.get_event_name()),

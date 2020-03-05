@@ -1,16 +1,13 @@
 import uuid
-import json
 from unittest import TestCase
 from tests.support.rdbms.database_manager import DataBaseManager
 from eventsserver.value.objects import (
-    ProducerId,
     StreamName,
-    EventJson,
     EventId,
     ConsumerId
 )
 from eventsserver.storage.write_event_stores import PostgreSqlWriteEventStore
-from eventsserver.storage.exceptions import EventStoreError, StreamReservedForProducer
+from eventsserver.storage.exceptions import EventStoreError
 
 
 class PostgreSQLWriteEventStoreTest(TestCase):

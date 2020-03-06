@@ -25,6 +25,7 @@ class EventTest(TestCase):
         self.assertEqual('/path/to/script.php', str(event.trigger_name))
         self.assertEqual('system', str(event.trigger_type))
         self.assertEqual("{'foo': 'bar'}", str(event.payload))
+        self.assertEqual('{"foo": "bar"}', event.payload.to_json())
 
     def test_it_can_be_converted_to_event_data(self):
 

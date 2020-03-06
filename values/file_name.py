@@ -2,7 +2,7 @@ class InvalidFileName(ValueError):
     """Throw this when file name is empty string."""
 
 
-class FileName(object):
+class FileName:
     def __init__(self, primitive_value: str):
         if not primitive_value:
             raise InvalidFileName('file name can not not be empty.')

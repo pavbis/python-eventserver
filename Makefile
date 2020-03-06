@@ -62,6 +62,11 @@ run_pylint:
 	$(runbackend) pipenv run python -m pylint eventsserver/
 .PHONY: run_pylint
 
+## Run vulture static code analyzer.
+run_vulture:
+	$(runbackend) pipenv run python -m vulture --exclude tests/ ./
+.PHONY: run_vulture
+
 ## Run unit tests.
 run_unittests:
 	$(runbackend) pipenv run python -m unittest discover tests/unit/ -v

@@ -13,6 +13,7 @@ pytz = "*"
 pylint = "*"
 prometheus-client = "*"
 psycopg2 = "*"
+vulture = "*"
 
 [requires]
 python_version = "3.8"

@@ -43,6 +43,7 @@ class PostgreSqlMetricsStorage(ProvidesMetrics):
                 GROUP BY pSR."streamName", pSR."producerId"''')
 
             rows = cursor.fetchall()
+
             for row in rows:
                 yield StreamTotals.from_list(row)
 
@@ -55,6 +56,7 @@ class PostgreSqlMetricsStorage(ProvidesMetrics):
                 GROUP BY cOF."streamName"''')
 
             rows = cursor.fetchall()
+
             for row in rows:
                 yield ConsumerTotals.from_list(row)
 
@@ -69,5 +71,6 @@ class PostgreSqlMetricsStorage(ProvidesMetrics):
             ORDER BY "streamName";''')
 
             rows = cursor.fetchall()
+
             for row in rows:
                 yield ConsumerOffset.from_list(row)

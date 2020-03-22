@@ -17,5 +17,5 @@ class EventPeriodSearch:
 
         if specification is not None:
             return specification
-        else:
-            raise UnsupportedPeriod('Period "{}" is not supported or invalid.'.format(str(period)))
+
+        raise UnsupportedPeriod('Period "{}" is not supported or invalid.'.format(str(period)))

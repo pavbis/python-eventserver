@@ -26,7 +26,7 @@ class EventPeriodTest(TestCase):
         period = Period('invalid')
 
         with self.assertRaises(UnsupportedPeriod) as context:
-            self.event_period_search.find_specification(period=period)
+            self.event_period_search.find_specification(period)
         self.assertTrue('Period "{}" is not supported or invalid.'.format(str(period)) in str(context.exception))
 
     def test_it_returns_last_week_specification(self) -> None:
